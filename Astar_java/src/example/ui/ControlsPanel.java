@@ -51,13 +51,13 @@ public class ControlsPanel extends JPanel {
         start.setBounds(110, height - 40, 80, 30);
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
-            canvas.startUserMovement();
+            canvas.startUserMovement(algorithm, algorithm.getNetwork());
+            canvas.disableMouseEvents();
         });
         add(start);
     }
 
     public void selectTile(Tile t) {
-
         switch (selectionType) {
             case START:
                 algorithm.setStart(t);
@@ -74,6 +74,11 @@ public class ControlsPanel extends JPanel {
                 break;
         }
 
+        algorithm.updateUI();
+    }
+
+    public void selectTiles(Tile t) {
+        algorithm.setStart(t);
         algorithm.updateUI();
     }
 

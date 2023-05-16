@@ -89,6 +89,16 @@ public class AStarAlgorithm extends Observable {
             n.setValid(true);
         }
     }
+    public void reset(Node start,Node end,Network network) {
+        this.start = start;
+        this.end = end;
+        this.path = null;
+        this.openList = null;
+        this.closedList = null;
+        for (Node n : network.getNodes()) {
+            n.setValid(true);
+        }
+    }
 
     private void retracePath(Node current) {
         Node temp = current;
@@ -138,8 +148,8 @@ public class AStarAlgorithm extends Observable {
         this.start = start;
     }
 
-    public void setEnd(Node end) {
-        this.end = end;
+    public void setEnd(Node end){
+            this.end = end;
     }
 
 }

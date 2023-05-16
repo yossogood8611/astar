@@ -9,9 +9,12 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import pathfinding.AStarAlgorithm;
+import pathfinding.element.Network;
 import pathfinding.element.Node;
 import example.element.Grid;
 import example.element.Tile;
+
+import static example.element.Tile.TILE_SIZE;
 
 public class GridPanel extends JPanel implements Observer {
 
@@ -47,8 +50,8 @@ public class GridPanel extends JPanel implements Observer {
                 int x = evt.getX();
                 int y = evt.getY();
 
-                int tileX = x / Tile.TILE_SIZE;
-                int tileY = y / Tile.TILE_SIZE;
+                int tileX = x / TILE_SIZE;
+                int tileY = y / TILE_SIZE;
 
                 Tile t = grid.find(tileX, tileY);
 
@@ -73,36 +76,64 @@ public class GridPanel extends JPanel implements Observer {
         });
     }
 
-    public void startUserMovement() {
+    public void startUserMovement(AStarAlgorithm algorithm, Network network) {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyCode();
+                int x = user.getX();
+                int y = user.getY();
                 if (keyCode == KeyEvent.VK_UP) {
                     if (user != null) {
-                        user = new Tile(user.getX(), user.getY() - 1);
+                        if (y == 0) {
+                            System.out.println("범위 벗어남");
+                            return;
+                        }
+                        user = new Tile(x, y - 1);
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_DOWN) {
                     if (user != null) {
-                        user = new Tile(user.getX(), user.getY() + 1);
+                        if (y == TILE_SIZE-1) {
+                            System.out.println("범위 벗어남");
+                            return;
+                        }
+                        user = new Tile(x, y + 1);
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_LEFT) {
                     if (user != null) {
-                        user = new Tile(user.getX() - 1, user.getY());
+                        if (x == 0) {
+                            System.out.println("범위 벗어남");
+                            return;
+                        }
+                        user = new Tile(x - 1, y);
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
                     if (user != null) {
-                        user = new Tile(user.getX() + 1, user.getY());
+                        if (x == TILE_SIZE-1) {
+                            System.out.println("범위 벗어남");
+                            return;
+                        }
+                        user = new Tile(x + 1, y);
                         repaint();
                     }
                 }
+                user.calculateNeighbours(network);
+                algorithm.reset(user, monster, network);
+                algorithm.solve();
             }
         });
         setFocusable(true);
         requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
+    }
+
+    public void disableMouseEvents() {
+        addMouseListener(new MouseAdapter() {
+        });
+        addMouseMotionListener(new MouseAdapter() {
+        });
     }
 
     @Override
@@ -114,8 +145,8 @@ public class GridPanel extends JPanel implements Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (user != null) {
-            int x = (user.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
-            int y = (user.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
+            int x = (user.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
+            int y = (user.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
 
             g.setColor(new Color(20, 122, 17));
             g.setStroke(widerStroke);
@@ -123,8 +154,8 @@ public class GridPanel extends JPanel implements Observer {
         }
 
         if (monster != null) {
-            int x = (monster.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
-            int y = (monster.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
+            int x = (monster.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
+            int y = (monster.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
 
             g.setColor(new Color(16, 49, 119));
             g.setStroke(widerStroke);
@@ -136,11 +167,11 @@ public class GridPanel extends JPanel implements Observer {
         if (grid != null && grid.getTiles() != null) {
             for (Tile t : grid.getTiles()) {
                 g.setColor(new Color(220, 220, 220));
-                g.drawRect(t.getX() * Tile.TILE_SIZE, t.getY() * Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
+                g.drawRect(t.getX() * TILE_SIZE, t.getY() * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 if (!t.isValid()) {
                     g.setColor(Color.GRAY);
-                    int x = (t.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
-                    int y = (t.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
+                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 5;
+                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 5;
 
                     g.fillOval(x, y, 10, 10);
                 }

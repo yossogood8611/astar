@@ -40,6 +40,13 @@ public class Tile extends Node {
 
         ArrayList<Node> nodes = new ArrayList<>();
 
+        extracted(grid, nodes);
+
+        setNeighbours(nodes);
+
+    }
+
+    public void extracted(Grid grid, ArrayList<Node> nodes) {
         int minX = 0;
         int minY = 0;
         int maxX = grid.getWidth() - 1;
@@ -62,23 +69,20 @@ public class Tile extends Node {
         }
 
         if (x > minX && y > minY) {
-            nodes.add(grid.find(x - 1, y - 1)); //northwest   
+            nodes.add(grid.find(x - 1, y - 1)); //northwest
         }
 
         if (x < maxX && y < maxY) {
-            nodes.add(grid.find(x + 1, y + 1)); //southeast  
+            nodes.add(grid.find(x + 1, y + 1)); //southeast
         }
 
         if (x < maxX && y > minY) {
-            nodes.add(grid.find(x + 1, y - 1)); //northeast  
+            nodes.add(grid.find(x + 1, y - 1)); //northeast
         }
 
         if (x > minY && y < maxY) {
             nodes.add(grid.find(x - 1, y + 1)); //southwest
         }
-
-        setNeighbours(nodes);
-
     }
 
     @Override
