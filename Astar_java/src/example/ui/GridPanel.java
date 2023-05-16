@@ -3,6 +3,7 @@ package example.ui;
 import example.element.Grid;
 import example.element.Tile;
 import pathfinding.AStarAlgorithm;
+import pathfinding.element.Network;
 import pathfinding.element.Node;
 
 import javax.swing.*;
@@ -13,6 +14,8 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class GridPanel extends JPanel implements Observer {
 
@@ -35,6 +38,44 @@ public class GridPanel extends JPanel implements Observer {
 
 
         setBorder(new LineBorder(Color.gray));
+
+        addKeyListener(new KeyListener() { // 키보드 이벤트 리스너 추가
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                if (keyCode == KeyEvent.VK_UP) { // 위쪽 화살표 키
+                    if (end != null) {
+                        end = new Tile(end.getX(), end.getY()-1);
+                        repaint();
+                    }
+                } else if (keyCode == KeyEvent.VK_DOWN) { // 아래쪽 화살표 키
+                    if (end != null) {
+                        end = new Tile(end.getX(), end.getY()+1);
+                        repaint();
+                    }
+                } else if (keyCode == KeyEvent.VK_LEFT) { // 왼쪽 화살표 키
+                    if (end != null) {
+                        end = new Tile(end.getX()-1, end.getY());
+                        repaint();
+                    }
+                } else if (keyCode == KeyEvent.VK_RIGHT) { // 오른쪽 화살표 키
+                    if (end != null) {
+                        end = new Tile(end.getX()+1, end.getY());
+                        repaint();
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+
+        setFocusable(true); // 키보드 입력을 받기 위해 포커스 설정
 
         addMouseListener(new MouseListener() {
             @Override
