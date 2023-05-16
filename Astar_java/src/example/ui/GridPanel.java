@@ -1,18 +1,18 @@
 package example.ui;
 
-import example.element.Grid;
-import example.element.Tile;
-import pathfinding.AStarAlgorithm;
-import pathfinding.element.Node;
-
-import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
+import pathfinding.AStarAlgorithm;
+import pathfinding.element.Node;
+import example.element.Grid;
+import example.element.Tile;
 
 public class GridPanel extends JPanel implements Observer {
 
@@ -27,24 +27,26 @@ public class GridPanel extends JPanel implements Observer {
     private BasicStroke defaultStroke;
     private BasicStroke widerStroke;
 
+    // 추가된 변수
+//    private int currentIndex; // 현재 경로 인덱스
+    private Timer pathTimer; // 경로 이동 타이머
+
+    private int currentIndex = 0;
+    private Timer timer;
+
     public GridPanel(ControlsPanel controls) {
         this.controls = controls;
 
         this.defaultStroke = new BasicStroke();
         this.widerStroke = new BasicStroke(2);
 
-
         setBorder(new LineBorder(Color.gray));
 
-        addMouseListener(new MouseListener() {
+        addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent me) {
-            }
-
-            @Override
-            public void mousePressed(MouseEvent me) {
-                int x = me.getX();
-                int y = me.getY();
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                int x = evt.getX();
+                int y = evt.getY();
 
                 int tileX = x / Tile.TILE_SIZE;
                 int tileY = y / Tile.TILE_SIZE;
@@ -55,20 +57,21 @@ public class GridPanel extends JPanel implements Observer {
                     controls.selectTile(t);
                 }
             }
-
-            @Override
-            public void mouseReleased(MouseEvent me) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent me) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent me) {
-            }
         });
 
+        // 경로 이동 타이머 초기화
+        timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (path != null && currentIndex < path.size()) {
+                    end = path.get(currentIndex);
+                    currentIndex++;
+                    repaint();
+                } else {
+                    timer.stop();
+                }
+            }
+        });
     }
 
     @Override
@@ -80,7 +83,6 @@ public class GridPanel extends JPanel implements Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (start != null) {
-
             int x = (start.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
             int y = (start.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
 
@@ -96,25 +98,6 @@ public class GridPanel extends JPanel implements Observer {
             g.setColor(new Color(16, 49, 119));
             g.setStroke(widerStroke);
             g.fillOval(x, y, 12, 12);
-        }
-
-        if (path != null) {
-            g.setColor(new Color(229, 142, 229));
-            for (int i = 0; i < path.size() - 1; i++) {
-                Tile t = path.get(i);
-                Tile t2 = path.get(i + 1);
-
-                int x = (t.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
-                int y = (t.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
-
-                int xx = (t2.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2);
-                int yy = (t2.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2);
-
-                g.setStroke(widerStroke);
-                g.fillOval(x, y, 10, 10);
-                g.setStroke(defaultStroke);
-                g.drawLine(x + 5, y + 5, xx, yy);
-            }
         }
 
         g.setStroke(defaultStroke);
@@ -135,22 +118,18 @@ public class GridPanel extends JPanel implements Observer {
 
         g.drawRect(getWidth() - 1, 0, 1, getHeight());
         g.drawRect(0, getHeight() - 1, getWidth(), 1);
-
     }
 
     @Override
     public void update(Observable o, Object o1) {
-
         AStarAlgorithm alg = (AStarAlgorithm) o;
-
         Grid grid = (Grid) alg.getNetwork();
         ArrayList<Node> path = alg.getPath();
         Node start = alg.getStart();
         Node end = alg.getEnd();
 
         this.grid = grid;
-
-        this.path = new ArrayList<Tile>();
+        this.path = new ArrayList<>();
 
         if (path != null) {
             for (Node n : path) {
@@ -172,8 +151,11 @@ public class GridPanel extends JPanel implements Observer {
             this.end = null;
         }
 
+        currentIndex = 0; // 인덱스 초기화
+        if (this.path != null && this.path.size() > 1) {
+            timer.start();
+        }
+
         repaint();
-
     }
-
 }
