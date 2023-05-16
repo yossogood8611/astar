@@ -21,8 +21,8 @@ public class GridPanel extends JPanel implements Observer {
     private Grid grid;
     private ArrayList<Tile> path;
 
-    private Tile start;
-    private Tile end;
+    private Tile user;
+    private Tile monster;
 
     private ControlsPanel controls;
 
@@ -54,23 +54,23 @@ public class GridPanel extends JPanel implements Observer {
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyCode();
                 if (keyCode == KeyEvent.VK_UP) { // 위쪽 화살표 키
-                    if (end != null) {
-                        end = new Tile(end.getX(), end.getY()-1);
+                    if (user != null) {
+                        user = new Tile(user.getX(), user.getY() - 1);
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_DOWN) { // 아래쪽 화살표 키
-                    if (end != null) {
-                        end = new Tile(end.getX(), end.getY()+1);
+                    if (user != null) {
+                        user = new Tile(user.getX(), user.getY() + 1);
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_LEFT) { // 왼쪽 화살표 키
-                    if (end != null) {
-                        end = new Tile(end.getX()-1, end.getY());
+                    if (user != null) {
+                        user = new Tile(user.getX() - 1, user.getY());
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_RIGHT) { // 오른쪽 화살표 키
-                    if (end != null) {
-                        end = new Tile(end.getX()+1, end.getY());
+                    if (user != null) {
+                        user = new Tile(user.getX() + 1, user.getY());
                         repaint();
                     }
                 }
@@ -105,7 +105,7 @@ public class GridPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (path != null && currentIndex < path.size()) {
-                    end = path.get(currentIndex);
+                    monster = path.get(currentIndex);
                     currentIndex++;
                     repaint();
                 } else {
@@ -123,18 +123,18 @@ public class GridPanel extends JPanel implements Observer {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (start != null) {
-            int x = (start.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
-            int y = (start.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
+        if (user != null) {
+            int x = (user.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
+            int y = (user.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
 
             g.setColor(new Color(20, 122, 17));
             g.setStroke(widerStroke);
             g.fillOval(x, y, 12, 12);
         }
 
-        if (end != null) {
-            int x = (end.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
-            int y = (end.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
+        if (monster != null) {
+            int x = (monster.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
+            int y = (monster.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 6;
 
             g.setColor(new Color(16, 49, 119));
             g.setStroke(widerStroke);
@@ -181,15 +181,15 @@ public class GridPanel extends JPanel implements Observer {
         }
 
         if (start != null && start instanceof Tile) {
-            this.start = (Tile) start;
+            this.user = (Tile) start;
         } else {
-            this.start = null;
+            this.user = null;
         }
 
         if (end != null && end instanceof Tile) {
-            this.end = (Tile) end;
+            this.monster = (Tile) end;
         } else {
-            this.end = null;
+            this.monster = null;
         }
 
         currentIndex = 0; // 인덱스 초기화
