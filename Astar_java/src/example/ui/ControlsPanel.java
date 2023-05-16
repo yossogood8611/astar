@@ -14,6 +14,7 @@ public class ControlsPanel extends JPanel {
     private SelectionType selectionType;
 
     private JComboBox<String> selector;
+    private GridPanel canvas;
 
     public ControlsPanel(int width, int height, AStarAlgorithm algorithm) {
 
@@ -50,6 +51,7 @@ public class ControlsPanel extends JPanel {
         start.setBounds(110, height - 40, 80, 30);
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
+            canvas.startUserMovement();
         });
         add(start);
     }
@@ -73,6 +75,10 @@ public class ControlsPanel extends JPanel {
         }
 
         algorithm.updateUI();
+    }
+
+    public void setGridPanel(GridPanel canvas) {
+        this.canvas = canvas;
     }
 
     private enum SelectionType {

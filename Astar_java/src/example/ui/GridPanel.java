@@ -1,10 +1,7 @@
 package example.ui;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -44,45 +41,6 @@ public class GridPanel extends JPanel implements Observer {
 
         setBorder(new LineBorder(Color.gray));
 
-
-        addKeyListener(new KeyListener() { // 키보드 이벤트 리스너 추가
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                int keyCode = e.getKeyCode();
-                if (keyCode == KeyEvent.VK_UP) { // 위쪽 화살표 키
-                    if (user != null) {
-                        user = new Tile(user.getX(), user.getY() - 1);
-                        repaint();
-                    }
-                } else if (keyCode == KeyEvent.VK_DOWN) { // 아래쪽 화살표 키
-                    if (user != null) {
-                        user = new Tile(user.getX(), user.getY() + 1);
-                        repaint();
-                    }
-                } else if (keyCode == KeyEvent.VK_LEFT) { // 왼쪽 화살표 키
-                    if (user != null) {
-                        user = new Tile(user.getX() - 1, user.getY());
-                        repaint();
-                    }
-                } else if (keyCode == KeyEvent.VK_RIGHT) { // 오른쪽 화살표 키
-                    if (user != null) {
-                        user = new Tile(user.getX() + 1, user.getY());
-                        repaint();
-                    }
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
-
-        setFocusable(true); // 키보드 입력을 받기 위해 포커스 설정
-
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -113,6 +71,38 @@ public class GridPanel extends JPanel implements Observer {
                 }
             }
         });
+    }
+
+    public void startUserMovement() {
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                if (keyCode == KeyEvent.VK_UP) {
+                    if (user != null) {
+                        user = new Tile(user.getX(), user.getY() - 1);
+                        repaint();
+                    }
+                } else if (keyCode == KeyEvent.VK_DOWN) {
+                    if (user != null) {
+                        user = new Tile(user.getX(), user.getY() + 1);
+                        repaint();
+                    }
+                } else if (keyCode == KeyEvent.VK_LEFT) {
+                    if (user != null) {
+                        user = new Tile(user.getX() - 1, user.getY());
+                        repaint();
+                    }
+                } else if (keyCode == KeyEvent.VK_RIGHT) {
+                    if (user != null) {
+                        user = new Tile(user.getX() + 1, user.getY());
+                        repaint();
+                    }
+                }
+            }
+        });
+        setFocusable(true);
+        requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
     }
 
     @Override
