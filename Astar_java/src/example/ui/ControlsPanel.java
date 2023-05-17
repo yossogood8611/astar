@@ -21,7 +21,7 @@ public class ControlsPanel extends JPanel {
     private JComboBox<String> selector;
     private GridPanel canvas;
 
-    private Timer timer;
+    public Timer timer;
     JLabel timerLabel;
     JLabel lifeLabel;
 
@@ -29,10 +29,11 @@ public class ControlsPanel extends JPanel {
 
     public void resetGameSetting(){
         timer.stop();
+        canvas.timer.stop();
+        canvas.pathTimer.stop();
         timerLabel.setText(TIME_60);
         lifeCount = 3;
         lifeLabel.setText("Life: " + lifeCount);
-
         algorithm.reset();
         algorithm.updateUI();
     }
@@ -136,9 +137,11 @@ public class ControlsPanel extends JPanel {
                 if (remainingTime == 0) {
                     algorithm.reset();
                     algorithm.updateUI();
+                    timer.stop();
+                    canvas.timer.stop();
+                    canvas.pathTimer.stop();
                     canvas.showEndGameDialog(true);
                     selectionType = SelectionType.START;
-                    timer.stop();
                     timerLabel.setText(TIME_60);
                     lifeCount = 3;
                     lifeLabel.setText("life: " + lifeCount);

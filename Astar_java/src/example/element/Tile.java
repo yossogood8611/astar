@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Tile extends Node {
 
     private int x, y;
-    public static int TILE_SIZE = 20;
+    public static int TILE_SIZE = 30;
 
     public Tile(int x, int y) {
         this.x = x;

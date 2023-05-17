@@ -34,11 +34,11 @@ public class GridPanel extends JPanel implements Observer {
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
 
-    private Timer pathTimer; // 경로 이동 타이머
+    public Timer pathTimer; // 경로 이동 타이머
     private int currentIndex = 0;
 
 
-    private Timer timer;
+    public Timer timer;
     private AStarAlgorithm algorithm;
 
     private KeyAdapter userMovement;
@@ -84,8 +84,11 @@ public class GridPanel extends JPanel implements Observer {
                     removeKeyListener(userMovement);
                     System.out.println("게임이 끝났습니다.");
                     check=true;
+                    algorithm.reset();
+                    algorithm.updateUI();
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
+                    showEndGameDialog(false);
                 }
             }
         });
@@ -122,6 +125,7 @@ public class GridPanel extends JPanel implements Observer {
                     repaint();
                 } else {
                     pathTimer.stop();
+                    timer.stop();
                 }
             }
         });
@@ -178,7 +182,6 @@ public class GridPanel extends JPanel implements Observer {
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
                     if (user != null) {
                         if (x == TILE_SIZE - 1) {
-                            showEndGameDialog(false);
                             lifeDown();
                             return;
                         }
@@ -206,6 +209,8 @@ public class GridPanel extends JPanel implements Observer {
                     pathTimer.stop();
                     timer.stop();
                     removeKeyListener(userMovement);
+                    algorithm.reset();
+                    algorithm.updateUI();
                     System.out.println("게임이 끝났습니다.");
                     setRequestFocusEnabled(false);
                     check=false;
