@@ -66,7 +66,10 @@ public class GridPanel extends JPanel implements Observer {
                 int x = evt.getX();
                 int y = evt.getY();
 
-                createWall(x, y);
+                int tileX = x / TILE_SIZE;
+                int tileY = y / TILE_SIZE;
+
+                createWall(tileX, tileY);
             }
         });
 
@@ -91,10 +94,9 @@ public class GridPanel extends JPanel implements Observer {
     }
 
     public void createWall(int x, int y) {
-        int tileX = x / TILE_SIZE;
-        int tileY = y / TILE_SIZE;
 
-        Tile t = grid.find(tileX, tileY);
+
+        Tile t = grid.find(x, y);
 
         if (t != null) {
             controls.selectTile(t);
@@ -263,7 +265,7 @@ public class GridPanel extends JPanel implements Observer {
 
             Image image = null;
             try {
-                image = ImageIO.read(new File("monster.png"));
+                image = ImageIO.read(new File("../monster.png"));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -348,7 +350,13 @@ public class GridPanel extends JPanel implements Observer {
         this.createMap = createMap;
     }
 
-    private void createMap(){
-        createMap.easyMap();
+    public void startMap(Grid grid) {
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
+        this.grid = grid;
+        createWall(2, 2); // 원하는 위치에 벽 생성
+        createWall(3, 2);
+        createWall(4, 2);
+        createWall(4, 4);
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
     }
 }

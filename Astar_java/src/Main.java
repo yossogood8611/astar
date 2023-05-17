@@ -34,6 +34,8 @@ public class Main {
 
         initUI();
 
+        canvas.startMap(grid);
+
         astar.addObserver(canvas);
         astar.updateUI();
     }
@@ -58,9 +60,9 @@ public class Main {
         canvas.setBounds(margin, margin, w, h);
 
         createMap = new CreateMap(canvas);
+        canvas.setCreateMap(createMap);
 
         controls.setGridPanel(canvas);
-        canvas.setCreateMap(createMap);
 
         container.add(controls);
         container.add(canvas);

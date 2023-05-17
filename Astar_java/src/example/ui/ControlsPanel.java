@@ -15,7 +15,7 @@ public class ControlsPanel extends JPanel {
     public static final String TIME_40 = "Time: 40";
     public static final String TIME_20 = "Time: 2";
     private AStarAlgorithm algorithm;
-    private SelectionType selectionType;
+    public static SelectionType selectionType;
     private LevelType levelType;
 
     private JComboBox<String> selector;
@@ -196,7 +196,7 @@ public class ControlsPanel extends JPanel {
         this.canvas = canvas;
     }
 
-    private enum SelectionType {
+    enum SelectionType {
         START, END, REVERSE
     }
 
