@@ -11,8 +11,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Main {
-    public static final int ROW_COUNT = 20;
-    public static final int COLUMN_COUNT = 20;
+    public static final int ROW_COUNT = 10;
+    public static final int COLUMN_COUNT = 10;
 
     private static MainFrame frame;
     private static JPanel container;
