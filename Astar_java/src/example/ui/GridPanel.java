@@ -36,7 +36,6 @@ public class GridPanel extends JPanel implements Observer {
     private BasicStroke defaultStroke;
 
     private BasicStroke widerStroke;
-    private CreateMap createMap;
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
 
@@ -150,8 +149,16 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
-                    pathTimer.stop();
                     timer.stop();
+                    RemoveKeyListener();
+                    System.out.println("게임이 끝났습니다.");
+                    check = true;
+                    setRequestFocusEnabled(false);
+                    controls.resetGameSetting();
+                    showEndGameDialog(false);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    easyMap();
                 }
             }
         });
@@ -382,12 +389,7 @@ public class GridPanel extends JPanel implements Observer {
         this.check = check;
     }
 
-    public void setCreateMap(CreateMap createMap) {
-        this.createMap = createMap;
-    }
-
     public void startMap(Grid grid) {
-        algorithm.reset();
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
         this.grid = grid;
         easyMap();
