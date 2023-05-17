@@ -119,20 +119,20 @@ public class ControlsPanel extends JPanel {
         Label timeLabelText = new Label("time:");
         timeLabelText.setBounds(10, height + 40, 30, 10);
         add(timeLabelText);
-        setLifeText = new JTextField();
-        setLifeText.disable();
-        setLifeText.setText(String.valueOf(60));
-        setLifeText.setBounds(10, height + 55, 85, 30);
-        add(setLifeText);
+        setTimeText = new JTextField();
+        setTimeText.disable();
+        setTimeText.setText(String.valueOf(60));
+        setTimeText.setBounds(10, height + 55, 85, 30);
+        add(setTimeText);
 
         Label lifeLabelText = new Label("life:");
         lifeLabelText.setBounds(105, height + 40, 30, 10);
         add(lifeLabelText);
-        setTimeText = new JTextField();
-        setTimeText.disable();
-        setTimeText.setText(String.valueOf(3));
-        setTimeText.setBounds(105, height + 55, 85, 30);
-        add(setTimeText);
+        setLifeText = new JTextField();
+        setLifeText.disable();
+        setLifeText.setText(String.valueOf(3));
+        setLifeText.setBounds(105, height + 55, 85, 30);
+        add(setLifeText);
 
         JButton reset = new JButton("Reset");
         reset.setBounds(10, height + 100, 85, 30);
@@ -151,6 +151,8 @@ public class ControlsPanel extends JPanel {
         JButton start = new JButton("Start");
         start.setBounds(105, height + 100, 85, 30);
         start.addActionListener((ActionEvent ae) -> {
+            remainingTime = Integer.parseInt(setTimeText.getText().replace("Time: ", ""));
+            lifeCount = Integer.parseInt(setLifeText.getText());
             algorithm.solve();
             canvas.startUserMovement(levelType);
             canvas.setCheck(false);
@@ -167,7 +169,6 @@ public class ControlsPanel extends JPanel {
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                remainingTime = Integer.parseInt(timerLabel.getText().replace("Time: ", ""));
                 remainingTime--;
                 timerLabel.setText("Time: " + remainingTime);
                 if (remainingTime == 0) {
@@ -222,6 +223,8 @@ public class ControlsPanel extends JPanel {
         switch (levelType) {
             case EASY:
                 canvas.easyMap();
+                setTimeText.setText(TIME_20.replace("Time: ", ""));
+                setLifeText.setText(String.valueOf(lifeCount));
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
@@ -229,6 +232,8 @@ public class ControlsPanel extends JPanel {
                 break;
             case NORMAL:
                 canvas.normalMap();
+                setTimeText.setText(TIME_40.replace("Time: ", ""));
+                setLifeText.setText(String.valueOf(lifeCount));
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
@@ -236,6 +241,8 @@ public class ControlsPanel extends JPanel {
                 break;
             case HARD:
                 canvas.hardMap();
+                setTimeText.setText(TIME_60.replace("Time: ", ""));
+                setLifeText.setText(String.valueOf(lifeCount));
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();

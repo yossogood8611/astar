@@ -274,21 +274,13 @@ public class GridPanel extends JPanel implements Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (user != null) {
-            int x = (user.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
-            int y = (user.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
+            int x = (user.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+            int y = (user.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
 
-            g.setColor(new Color(20, 122, 17));
-            g.setStroke(widerStroke);
-            g.fillOval(x, y, 20, 20);
-        }
 
-        if (monster != null) {
-            int x = (monster.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
-            int y = (monster.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
-
-            Image image = null;
+            Image userImage = null;
             try {
-                image = ImageIO.read(new File("monster.png"));
+                userImage = ImageIO.read(new File("user.png"));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -296,7 +288,27 @@ public class GridPanel extends JPanel implements Observer {
 
             BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2d = myImage.createGraphics();
-            g2d.drawImage(image, 0, 0, 30, 30, null);
+            g2d.drawImage(userImage, 0, 0, 30, 30, null);
+            g2d.dispose();
+            g.drawImage(myImage, x, y, 150, 150, null);
+            g.setStroke(widerStroke);
+        }
+
+        if (monster != null) {
+            int x = (monster.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+            int y = (monster.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+
+            Image monsterImage = null;
+            try {
+                monsterImage = ImageIO.read(new File("monster.png"));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = myImage.createGraphics();
+            g2d.drawImage(monsterImage, 0, 0, 30, 30, null);
             g2d.dispose();
             g.drawImage(myImage, x, y, 150, 150, null);
             g.setStroke(widerStroke);
