@@ -25,9 +25,11 @@ public class ControlsPanel extends JPanel {
     JLabel timerLabel;
     JLabel lifeLabel;
 
+    LevelType levelState;
+
     private int lifeCount = 3;
 
-    public void resetGameSetting(){
+    public void resetGameSetting() {
         timer.stop();
         canvas.timer.stop();
         canvas.pathTimer.stop();
@@ -38,28 +40,29 @@ public class ControlsPanel extends JPanel {
         algorithm.updateUI();
     }
 
-    public void lifeDown(){
+    public void lifeDown() {
         this.lifeCount--;
         this.lifeLabel.setText("Life: " + this.lifeCount);
     }
 
-    public boolean isLifeZero(){
-        if(lifeCount==0) return true;
+    public boolean isLifeZero() {
+        if (lifeCount == 0) return true;
         else return false;
     }
 
-    public int getLifeCount(){
+    public int getLifeCount() {
         return this.lifeCount;
     }
 
-    public Timer getTimer(){
+    public Timer getTimer() {
         return this.timer;
     }
-    public void setLifeCount(int lifeCount){
-       this.lifeCount = lifeCount;
+
+    public void setLifeCount(int lifeCount) {
+        this.lifeCount = lifeCount;
     }
 
-    public void setTimer(Timer timer){
+    public void setTimer(Timer timer) {
         this.timer = timer;
     }
 
@@ -68,6 +71,7 @@ public class ControlsPanel extends JPanel {
         this.algorithm = algorithm;
         this.selectionType = SelectionType.START;
         this.levelType = LevelType.EASY;
+        this.levelState = LevelType.EASY;
 
         setBorder(new LineBorder(Color.gray));
         setLayout(null);
@@ -88,13 +92,14 @@ public class ControlsPanel extends JPanel {
 
         JComboBox<String> levelSelector = new JComboBox<>();
         levelSelector.addItem("Easy");
-        levelSelector.addItem("Medium");
+        levelSelector.addItem("Normal");
         levelSelector.addItem("Hard");
+        levelSelector.addItem("Custom");
         levelSelector.setBounds(10, height - 50, width - 20, 30);
         levelSelector.addActionListener((ActionEvent e) -> {
-             levelType =levelType.values()[levelSelector.getSelectedIndex()];
+            levelType = levelType.values()[levelSelector.getSelectedIndex()];
             selectLevel();
-           });
+        });
         add(levelSelector);
 
 
@@ -125,7 +130,7 @@ public class ControlsPanel extends JPanel {
 
         // Inside the ControlsPanel constructor
         timerLabel = new JLabel(TIME_20); // Initial time can be set to 60 seconds
-        timerLabel.setBounds(20, height+20 , 80, 30);
+        timerLabel.setBounds(20, height + 20, 80, 30);
         add(timerLabel);
 
         timer = new Timer(1000, new ActionListener() {
@@ -151,7 +156,7 @@ public class ControlsPanel extends JPanel {
         });
         // Inside the ControlsPanel constructor
         lifeLabel = new JLabel("Life: " + lifeCount); // Initial life count can be set to 3
-        lifeLabel.setBounds(120, height+20 , 80, 30);
+        lifeLabel.setBounds(120, height + 20, 80, 30);
         add(lifeLabel);
     }
 
@@ -165,7 +170,12 @@ public class ControlsPanel extends JPanel {
             case END:
                 algorithm.setEnd(t);
                 selectionType = SelectionType.REVERSE;
-                selector.setSelectedIndex(2);
+                try {
+                    selector.setSelectedIndex(2);
+                } catch (Exception e) {
+
+                }
+
                 break;
             default:
                 t.reverseValidation();
@@ -189,6 +199,10 @@ public class ControlsPanel extends JPanel {
                 canvas.hardMap();
                 timerLabel.setText(TIME_60);
                 break;
+            case CUSTOM:
+                canvas.customMap();
+                timerLabel.setText(TIME_60);
+                break;
         }
 
         algorithm.updateUI();
@@ -208,7 +222,7 @@ public class ControlsPanel extends JPanel {
     }
 
     public enum LevelType {
-        EASY, NORMAL, HARD
+        EASY, NORMAL, HARD, CUSTOM
     }
 
 

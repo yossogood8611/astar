@@ -390,4 +390,8 @@ public class GridPanel extends JPanel implements Observer {
         createWall(4, 4);
         ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
     }
+
+    public void customMap() {
+        algorithm.reset();
+    }
 }
