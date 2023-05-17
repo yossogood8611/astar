@@ -120,7 +120,7 @@ public class GridPanel extends JPanel implements Observer {
             message = "Congratulations! You won the game.";
             title = "You Win";
         } else {
-            message = "Game Over. You lost the game.";
+            message = "Game Over. You lose the game.";
             title = "Game Over";
         }
 
@@ -150,6 +150,10 @@ public class GridPanel extends JPanel implements Observer {
 
         }
         contentSize++;
+    }
+
+    public void showCanNotBuild() {
+        JOptionPane.showMessageDialog(this, "생성 불가능 합니다.", "warning", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void startUserMovement(ControlsPanel.LevelType levelType) {

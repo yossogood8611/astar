@@ -211,22 +211,34 @@ public class ControlsPanel extends JPanel {
     public void selectTile(Tile t) {
         switch (selectionType) {
             case START:
-                algorithm.setStart(t);
-                selectionType = SelectionType.END;
-                selector.setSelectedIndex(1);
+                if (t.isValid()) {
+                    algorithm.setStart(t);
+                    selectionType = SelectionType.END;
+                    selector.setSelectedIndex(1);
+                } else {
+                    canvas.showCanNotBuild();
+                }
                 break;
             case END:
-                algorithm.setEnd(t);
-                selectionType = SelectionType.REVERSE;
-                try {
+                if (t.isValid()) {
+                    algorithm.setEnd(t);
+                    selectionType = SelectionType.REVERSE;
                     selector.setSelectedIndex(2);
-                } catch (Exception e) {
-
+                } else {
+                    canvas.showCanNotBuild();
                 }
-
                 break;
             default:
-                t.reverseValidation();
+                Tile start = (Tile) algorithm.getStart();
+                Tile end = (Tile) algorithm.getEnd();
+                if(start==null||end==null){
+                    t.reverseValidation();
+                }
+                if(((t.getX()==start.getX())&&(t.getY()==start.getY()))||((t.getX()==end.getX())&&(t.getY()==end.getY()))){
+                    canvas.showCanNotBuild();
+                }else {
+                    t.reverseValidation();
+                }
                 break;
         }
 
@@ -239,6 +251,7 @@ public class ControlsPanel extends JPanel {
                 canvas.easyMap();
                 setTimeText.setText(TIME_20.replace("Time: ", ""));
                 setLifeText.setText(String.valueOf(lifeCount));
+                setSpeedText.setText("500");
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
@@ -248,6 +261,7 @@ public class ControlsPanel extends JPanel {
                 canvas.normalMap();
                 setTimeText.setText(TIME_40.replace("Time: ", ""));
                 setLifeText.setText(String.valueOf(lifeCount));
+                setSpeedText.setText("250");
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
@@ -257,6 +271,7 @@ public class ControlsPanel extends JPanel {
                 canvas.hardMap();
                 setTimeText.setText(TIME_60.replace("Time: ", ""));
                 setLifeText.setText(String.valueOf(lifeCount));
+                setSpeedText.setText("100");
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
