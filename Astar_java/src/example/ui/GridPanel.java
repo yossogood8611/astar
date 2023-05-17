@@ -75,6 +75,7 @@ public class GridPanel extends JPanel implements Observer {
                     timer.stop();
                     removeKeyListener(userMovement);
                     System.out.println("게임이 끝났습니다.");
+                    setRequestFocusEnabled(false);
                 }
             }
         });
