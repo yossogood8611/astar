@@ -18,7 +18,6 @@ import example.element.Grid;
 import example.element.Tile;
 
 import static example.element.Tile.TILE_SIZE;
-import static example.ui.ControlsPanel.lifeLabel;
 
 public class GridPanel extends JPanel implements Observer {
 
@@ -48,7 +47,7 @@ public class GridPanel extends JPanel implements Observer {
     public KeyAdapter userMovement;
     public Timer itemTimer;
     public Tile item;
-  
+
     public static String[] header = {"난이도", "남은 시간", "남은 생명"};
     public static String[][] contents = new String[50][4]; //{{"Hard", "60", "3", "321223(점수)"}};
     public static int contentSize = 0;
@@ -64,7 +63,7 @@ public class GridPanel extends JPanel implements Observer {
         this.widerStroke = new BasicStroke(2);
         this.algorithm = algorithm;
 
-        this.item = new Tile(0,0);
+        this.item = new Tile(0, 0);
 
         setBorder(new LineBorder(Color.gray));
 
@@ -98,7 +97,7 @@ public class GridPanel extends JPanel implements Observer {
 
                     timer.stop();
                     itemTimer.stop();
-                    item=null;
+                    item = null;
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
@@ -112,14 +111,12 @@ public class GridPanel extends JPanel implements Observer {
             }
         });
 
-        itemTimer = new Timer(3000, new ActionListener() {
+        itemTimer = new Timer(10000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Tile randomEmptyTile = grid.findEmptyTile();
                 if (randomEmptyTile != null) {
-                    if(item==null){
-                        return;
-                    }
+                    item.setCheck(false);
                     item.setX(randomEmptyTile.getX());
                     item.setY(randomEmptyTile.getY());
                 } else {
@@ -153,7 +150,7 @@ public class GridPanel extends JPanel implements Observer {
         setRank();
 
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
-        setBackground(new Color(238,238,238));
+        setBackground(new Color(238, 238, 238));
     }
 
     private void setRank() {
@@ -213,7 +210,7 @@ public class GridPanel extends JPanel implements Observer {
 
                     timer.stop();
                     itemTimer.stop();
-                    item=null;
+                    item = null;
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
@@ -290,10 +287,13 @@ public class GridPanel extends JPanel implements Observer {
                         repaint();
                     }
                 }
-                if(item==null){
+                if (item == null) {
                     return;
-                }else{
-
+                } else {
+                    if (x == item.getX() && y == item.getY()) {
+                        setBackground(new Color(238, 238, 238));
+                        item.setCheck(true);
+                    }
                 }
 
                 user.calculateNeighbours(algorithm.getNetwork());
@@ -315,7 +315,7 @@ public class GridPanel extends JPanel implements Observer {
                     pathTimer.stop();
                     timer.stop();
                     itemTimer.stop();
-                    item=null;
+                    item = null;
 
                     RemoveKeyListener();
                     algorithm.reset();
@@ -407,12 +407,18 @@ public class GridPanel extends JPanel implements Observer {
             }
         }
 
-        if(itemTimer.isRunning()){
-            if(item==null){
+        if (itemTimer.isRunning()) {
+            if (item == null) {
                 return;
             }
-            g.setColor(Color.ORANGE);
-            g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
+            if (!item.isCheck()) {
+                g.setColor(Color.ORANGE);
+                g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
+            }else {
+                g.setColor(new Color(238,238,238));
+                g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
+
+            }
         }
 
         g.drawRect(getWidth() - 1, 0, 1, getHeight());
@@ -466,6 +472,7 @@ public class GridPanel extends JPanel implements Observer {
     public void setCheck(boolean check) {
         this.check = check;
     }
+
 
     public void startMap(Grid grid) {
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;

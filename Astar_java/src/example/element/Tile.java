@@ -11,6 +11,16 @@ public class Tile extends Node {
     private int x, y;
     public static int TILE_SIZE = 30;
 
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    private boolean check =false;
+
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
