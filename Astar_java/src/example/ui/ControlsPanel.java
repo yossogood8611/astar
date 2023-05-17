@@ -14,7 +14,7 @@ public class ControlsPanel extends JPanel {
 
     public static final String TIME_60 = "Time: 60";
     public static final String TIME_40 = "Time: 40";
-    public static final String TIME_20 = "Time: 2";
+    public static final String TIME_20 = "Time: 20";
     private AStarAlgorithm algorithm;
     public static SelectionType selectionType;
     public static LevelType levelType;
@@ -32,9 +32,12 @@ public class ControlsPanel extends JPanel {
 
     public static JScrollPane scrollPane;
 
-    int remainingTime;
+    public static int remainingTime;
 
     private int lifeCount = 3;
+
+    public static int endTime;
+    public static int endLife;
 
     public void resetGameSetting() {
         timer.stop();
@@ -122,7 +125,7 @@ public class ControlsPanel extends JPanel {
         add(timeLabelText);
         setTimeText = new JTextField();
         setTimeText.disable();
-        setTimeText.setText(String.valueOf(60));
+        setTimeText.setText(String.valueOf(TIME_20));
         setTimeText.setBounds(10, height + 55, 85, 30);
         add(setTimeText);
 
@@ -175,6 +178,8 @@ public class ControlsPanel extends JPanel {
                 remainingTime--;
                 timerLabel.setText("Time: " + remainingTime);
                 if (remainingTime == 0) {
+                    endLife = Integer.parseInt(lifeLabel.getText().replace("Life: ", ""));
+                    endTime = remainingTime;
                     algorithm.reset();
                     algorithm.updateUI();
                     timer.stop();
@@ -231,12 +236,12 @@ public class ControlsPanel extends JPanel {
             default:
                 Tile start = (Tile) algorithm.getStart();
                 Tile end = (Tile) algorithm.getEnd();
-                if(start==null||end==null){
+                if (start == null || end == null) {
                     t.reverseValidation();
                 }
-                if(((t.getX()==start.getX())&&(t.getY()==start.getY()))||((t.getX()==end.getX())&&(t.getY()==end.getY()))){
+                if (((t.getX() == start.getX()) && (t.getY() == start.getY())) || ((t.getX() == end.getX()) && (t.getY() == end.getY()))) {
                     canvas.showCanNotBuild();
-                }else {
+                } else {
                     t.reverseValidation();
                 }
                 break;

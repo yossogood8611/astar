@@ -18,6 +18,7 @@ import example.element.Grid;
 import example.element.Tile;
 
 import static example.element.Tile.TILE_SIZE;
+import static example.ui.ControlsPanel.lifeLabel;
 
 public class GridPanel extends JPanel implements Observer {
 
@@ -46,7 +47,7 @@ public class GridPanel extends JPanel implements Observer {
 
     public KeyAdapter userMovement;
 
-    public static String[] header = {"난이도", "생존 시간", "남은 생명"};
+    public static String[] header = {"난이도", "남은 시간", "남은 생명"};
     public static String[][] contents = new String[50][4]; //{{"Hard", "60", "3", "321223(점수)"}};
     public static int contentSize = 0;
 
@@ -89,6 +90,9 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
+                    ControlsPanel.endLife = 0;
+                    ControlsPanel.endTime = ControlsPanel.remainingTime;
+
                     timer.stop();
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
@@ -130,25 +134,22 @@ public class GridPanel extends JPanel implements Observer {
     }
 
     private void setRank() {
-        for (int i = 0; i < contentSize + 1; i++) {
-            contents[i][0] = ControlsPanel.levelType.name();
-            contents[i][1] = ControlsPanel.timerLabel.getText();
-            contents[i][2] = ControlsPanel.lifeLabel.getText();
-            int score = 0;
-            if (contents[i][0] == ControlsPanel.LevelType.HARD.name())
-                score += 60;
-            else if (contents[i][0] == ControlsPanel.LevelType.NORMAL.name())
-                score += 80;
-            else if (contents[i][0] == ControlsPanel.LevelType.EASY.name())
-                score += 90;
-            else
-                score += 100;
+        contents[contentSize][0] = ControlsPanel.levelType.name();
+        contents[contentSize][1] = String.valueOf(ControlsPanel.endTime);
+        contents[contentSize][2] = String.valueOf(ControlsPanel.endLife);
+        int score = 0;
+        if (contents[contentSize][0] == ControlsPanel.LevelType.HARD.name())
+            score += 60;
+        else if (contents[contentSize][0] == ControlsPanel.LevelType.NORMAL.name())
+            score += 80;
+        else if (contents[contentSize][0] == ControlsPanel.LevelType.EASY.name())
+            score += 90;
+        else
+            score += 100;
 
-            contents[i][3] = String.valueOf(score - Integer.parseInt(contents[i][1].replace("Time: ", "")) - Integer.parseInt(contents[i][2].replace("Life: ", "")));
+        contents[contentSize][3] = String.valueOf(score - Integer.parseInt(contents[contentSize][1].replace("Time: ", "")) - Integer.parseInt(contents[contentSize][2].replace("Life: ", "")));
 
-            controls.putRank();
-
-        }
+        controls.putRank();
         contentSize++;
     }
 
@@ -184,6 +185,9 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
+                    ControlsPanel.endLife = 0;
+                    ControlsPanel.endTime = ControlsPanel.remainingTime;
+
                     timer.stop();
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
@@ -265,6 +269,7 @@ public class GridPanel extends JPanel implements Observer {
                 algorithm.reset(user, monster);
                 algorithm.solve();
             }
+
             private void lifeDown() {
                 System.out.println("범위 벗어남");
                 controls.lifeDown();
@@ -273,6 +278,9 @@ public class GridPanel extends JPanel implements Observer {
 
             private void gameOver() {
                 if (controls.isLifeZero()) {
+                    ControlsPanel.endLife = 0;
+                    ControlsPanel.endTime = ControlsPanel.remainingTime;
+
                     pathTimer.stop();
                     timer.stop();
 
