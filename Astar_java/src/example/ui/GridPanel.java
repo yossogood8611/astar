@@ -117,6 +117,9 @@ public class GridPanel extends JPanel implements Observer {
             public void actionPerformed(ActionEvent e) {
                 Tile randomEmptyTile = grid.findEmptyTile();
                 if (randomEmptyTile != null) {
+                    if(item==null){
+                        return;
+                    }
                     item.setX(randomEmptyTile.getX());
                     item.setY(randomEmptyTile.getY());
                 } else {
@@ -285,9 +288,12 @@ public class GridPanel extends JPanel implements Observer {
                         repaint();
                     }
                 }
-                if(x==item.getX() && y == item.getY()){
-                    
+                if(item==null){
+                    return;
+                }else{
+
                 }
+
                 user.calculateNeighbours(algorithm.getNetwork());
                 algorithm.reset(user, monster);
                 algorithm.solve();
@@ -400,6 +406,9 @@ public class GridPanel extends JPanel implements Observer {
         }
 
         if(itemTimer.isRunning()){
+            if(item==null){
+                return;
+            }
             g.setColor(Color.ORANGE);
             g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
         }
