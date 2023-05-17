@@ -79,10 +79,21 @@ public class GridPanel extends JPanel implements Observer {
                     System.out.println("게임이 끝났습니다.");
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
-                    //게임 실패 띄우기
+                    showEndGameDialog(false);
                 }
             }
         });
+    }
+
+    public void showEndGameDialog(boolean isGameWon) {
+        String message;
+        if (isGameWon) {
+            message = "Congratulations! You won the game.";
+        } else {
+            message = "Game Over. You lost the game.";
+        }
+
+        JOptionPane.showMessageDialog(this, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void startUserMovement() {
@@ -111,6 +122,7 @@ public class GridPanel extends JPanel implements Observer {
                                 System.out.println("게임이 끝났습니다.");
                                 setRequestFocusEnabled(false);
                                 controls.resetGameSetting();
+                                showEndGameDialog(false);
                             }
                             return;
                         }
@@ -128,6 +140,7 @@ public class GridPanel extends JPanel implements Observer {
                                 System.out.println("게임이 끝났습니다.");
                                 setRequestFocusEnabled(false);
                                 controls.resetGameSetting();
+                                showEndGameDialog(false);
                             }
                             return;
                         }
@@ -145,6 +158,7 @@ public class GridPanel extends JPanel implements Observer {
                                 System.out.println("게임이 끝났습니다.");
                                 setRequestFocusEnabled(false);
                                 controls.resetGameSetting();
+                                showEndGameDialog(false);
                             }
                             return;
                         }
@@ -162,6 +176,7 @@ public class GridPanel extends JPanel implements Observer {
                                 System.out.println("게임이 끝났습니다.");
                                 setRequestFocusEnabled(false);
                                 controls.resetGameSetting();
+                                showEndGameDialog(false);
                             }
                             return;
                         }

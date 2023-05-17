@@ -111,7 +111,7 @@ public class ControlsPanel extends JPanel {
         add(start);
 
         // Inside the ControlsPanel constructor
-        timerLabel = new JLabel("Time: 60"); // Initial time can be set to 60 seconds
+        timerLabel = new JLabel("Time: 10"); // Initial time can be set to 60 seconds
         timerLabel.setBounds(20, height+20 , 80, 30);
         add(timerLabel);
 
@@ -120,8 +120,14 @@ public class ControlsPanel extends JPanel {
             remainingTime--;
             timerLabel.setText("Time: " + remainingTime);
             if (remainingTime == 0) {
-                // Handle time's up logic
-                // Stop the timer or perform any necessary actions
+                canvas.showEndGameDialog(true);
+                algorithm.reset();
+                algorithm.updateUI();
+                selectionType = SelectionType.START;
+                timer.stop();
+                timerLabel.setText("Time: 60");
+                lifeCount = 3;
+                lifeLabel.setText("life: " + lifeCount);
             }
         });
 
