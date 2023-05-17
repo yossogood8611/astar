@@ -125,7 +125,7 @@ public class ControlsPanel extends JPanel {
         add(timeLabelText);
         setTimeText = new JTextField();
         setTimeText.disable();
-        setTimeText.setText(String.valueOf(TIME_20));
+        setTimeText.setText(TIME_20.replace("Time: ", ""));
         setTimeText.setBounds(10, height + 55, 85, 30);
         add(setTimeText);
 
