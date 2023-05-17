@@ -45,7 +45,10 @@ public class GridPanel extends JPanel implements Observer {
     public Timer timer;
     private AStarAlgorithm algorithm;
 
-    private KeyAdapter userMovement;
+    public KeyAdapter userMovement;
+    public void RemoveKeyListener(){
+        removeKeyListener(userMovement);
+    }
     public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
         this.controls = controls;
 
@@ -85,7 +88,7 @@ public class GridPanel extends JPanel implements Observer {
                     repaint();
                 } else {
                     timer.stop();
-                    removeKeyListener(userMovement);
+                    RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check=true;
                     algorithm.reset();
@@ -212,7 +215,7 @@ public class GridPanel extends JPanel implements Observer {
                 if(controls.isLifeZero()){
                     pathTimer.stop();
                     timer.stop();
-                    removeKeyListener(userMovement);
+                    RemoveKeyListener();
                     algorithm.reset();
                     algorithm.updateUI();
                     System.out.println("게임이 끝났습니다.");
@@ -325,6 +328,7 @@ public class GridPanel extends JPanel implements Observer {
         if (this.path != null && this.path.size() > 1) {
             timer.start();
         }
+
 
         repaint();
     }
