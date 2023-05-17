@@ -46,15 +46,13 @@ public class GridPanel extends JPanel implements Observer {
     public Timer timer;
     private AStarAlgorithm algorithm;
 
-<<<<<<< HEAD
     public KeyAdapter userMovement;
     public void RemoveKeyListener(){
         removeKeyListener(userMovement);
     }
-=======
-    private KeyAdapter userMovement;
 
->>>>>>> 72f4f49b38d17bc3709f5338e75d63be30460c89
+
+
     public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
         this.controls = controls;
 
@@ -232,13 +230,11 @@ public class GridPanel extends JPanel implements Observer {
                 if (controls.isLifeZero()) {
                     pathTimer.stop();
                     timer.stop();
-<<<<<<< HEAD
+
                     RemoveKeyListener();
                     algorithm.reset();
                     algorithm.updateUI();
-=======
-                    removeKeyListener(userMovement);
->>>>>>> 72f4f49b38d17bc3709f5338e75d63be30460c89
+
                     System.out.println("게임이 끝났습니다.");
                     setRequestFocusEnabled(false);
                     check = false;
