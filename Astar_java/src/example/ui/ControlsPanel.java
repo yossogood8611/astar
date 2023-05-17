@@ -24,6 +24,7 @@ public class ControlsPanel extends JPanel {
     public Timer timer;
     JLabel timerLabel;
     JLabel lifeLabel;
+    public static JTextField setSpeedText;
 
     LevelType levelState;
 
@@ -102,9 +103,18 @@ public class ControlsPanel extends JPanel {
         });
         add(levelSelector);
 
+        Label speedLabel = new Label("speed:");
+        speedLabel.setBounds(10, height - 10, width - 20, 30);
+        add(speedLabel);
+
+        setSpeedText = new JTextField();
+        setSpeedText.disable();
+        setSpeedText.setText(String.valueOf(300));
+        setSpeedText.setBounds(10, height + 15, width - 20, 30);
+        add(setSpeedText);
 
         JButton reset = new JButton("Reset");
-        reset.setBounds(10, height - 15, 80, 30);
+        reset.setBounds(10, height + 50, 80, 30);
         reset.addActionListener((ActionEvent ae) -> {
             algorithm.reset();
             algorithm.updateUI();
@@ -118,7 +128,7 @@ public class ControlsPanel extends JPanel {
         add(reset);
 
         JButton start = new JButton("Start");
-        start.setBounds(110, height - 15, 80, 30);
+        start.setBounds(110, height + 50, 80, 30);
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
             canvas.startUserMovement(levelType);
@@ -130,7 +140,7 @@ public class ControlsPanel extends JPanel {
 
         // Inside the ControlsPanel constructor
         timerLabel = new JLabel(TIME_20); // Initial time can be set to 60 seconds
-        timerLabel.setBounds(20, height + 20, 80, 30);
+        timerLabel.setBounds(20, height + 80, 80, 30);
         add(timerLabel);
 
         timer = new Timer(1000, new ActionListener() {
@@ -158,7 +168,7 @@ public class ControlsPanel extends JPanel {
         });
         // Inside the ControlsPanel constructor
         lifeLabel = new JLabel("Life: " + lifeCount); // Initial life count can be set to 3
-        lifeLabel.setBounds(120, height + 20, 80, 30);
+        lifeLabel.setBounds(120, height + 80, 80, 30);
         add(lifeLabel);
     }
 
@@ -191,18 +201,22 @@ public class ControlsPanel extends JPanel {
         switch (levelType) {
             case EASY:
                 canvas.easyMap();
+                setSpeedText.disable();
                 timerLabel.setText(TIME_20);
                 break;
             case NORMAL:
                 canvas.normalMap();
+                setSpeedText.disable();
                 timerLabel.setText(TIME_40);
                 break;
             case HARD:
                 canvas.hardMap();
+                setSpeedText.disable();
                 timerLabel.setText(TIME_60);
                 break;
             case CUSTOM:
                 canvas.customMap();
+                setSpeedText.enable();
                 timerLabel.setText(TIME_60);
                 break;
         }

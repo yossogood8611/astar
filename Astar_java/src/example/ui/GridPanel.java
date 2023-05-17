@@ -47,10 +47,10 @@ public class GridPanel extends JPanel implements Observer {
     private AStarAlgorithm algorithm;
 
     public KeyAdapter userMovement;
-    public void RemoveKeyListener(){
+
+    public void RemoveKeyListener() {
         removeKeyListener(userMovement);
     }
-
 
 
     public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
@@ -136,6 +136,9 @@ public class GridPanel extends JPanel implements Observer {
                 break;
             case HARD:
                 speed = 100;
+                break;
+            case CUSTOM:
+                speed = Integer.parseInt(ControlsPanel.setSpeedText.getText());
                 break;
         }
         pathTimer = new Timer(speed, new ActionListener() {
