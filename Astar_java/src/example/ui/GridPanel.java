@@ -5,12 +5,10 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
+import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
 import pathfinding.AStarAlgorithm;
@@ -48,8 +46,9 @@ public class GridPanel extends JPanel implements Observer {
 
     public KeyAdapter userMovement;
 
-    public static String[] header = {"순위", "생존 시간", "난이도"};
-    public static ArrayList[][] contents = new ArrayList[100][3]; //{{"1", "60", "Hard"}}
+    public static String[] header = {"난이도", "생존 시간", "남은 생명"};
+    public static String[][] contents = new String[50][4]; //{{"Hard", "60", "3", "321223(점수)"}};
+    public static int contentSize = 0;
 
     public void RemoveKeyListener() {
         removeKeyListener(userMovement);
@@ -90,13 +89,13 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
+                    showEndGameDialog(false);
                     timer.stop();
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
-                    showEndGameDialog(false);
                     algorithm.reset();
                     algorithm.updateUI();
                     easyMap();
@@ -116,15 +115,41 @@ public class GridPanel extends JPanel implements Observer {
     public void showEndGameDialog(boolean isGameWon) {
         String message;
         String title;
+
         if (isGameWon) {
             message = "Congratulations! You won the game.";
-            title="You Win";
+            title = "You Win";
         } else {
             message = "Game Over. You lost the game.";
-            title="Game Over";
+            title = "Game Over";
         }
 
+        setRank();
+
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void setRank() {
+        for (int i = 0; i < contentSize + 1; i++) {
+            contents[i][0] = ControlsPanel.levelType.name();
+            contents[i][1] = ControlsPanel.timerLabel.getText();
+            contents[i][2] = ControlsPanel.lifeLabel.getText();
+            int score = 0;
+            if (contents[i][0] == ControlsPanel.LevelType.HARD.name())
+                score += 60;
+            else if (contents[i][0] == ControlsPanel.LevelType.NORMAL.name())
+                score += 80;
+            else if (contents[i][0] == ControlsPanel.LevelType.EASY.name())
+                score += 90;
+            else
+                score += 100;
+
+            contents[i][3] = String.valueOf(score - Integer.parseInt(contents[i][1].replace("Time: ", "")) - Integer.parseInt(contents[i][2].replace("Life: ", "")));
+
+            controls.putRank();
+
+        }
+        contentSize++;
     }
 
     public void startUserMovement(ControlsPanel.LevelType levelType) {
@@ -155,13 +180,13 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
+                    showEndGameDialog(false);
                     timer.stop();
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
-                    showEndGameDialog(false);
                     algorithm.reset();
                     algorithm.updateUI();
                     easyMap();
@@ -249,6 +274,7 @@ public class GridPanel extends JPanel implements Observer {
 
             private void gameOver() {
                 if (controls.isLifeZero()) {
+                    showEndGameDialog(false);
                     pathTimer.stop();
                     timer.stop();
 
@@ -260,7 +286,6 @@ public class GridPanel extends JPanel implements Observer {
                     setRequestFocusEnabled(false);
                     check = false;
                     controls.resetGameSetting();
-                    showEndGameDialog(false);
                     algorithm.reset();
                     algorithm.updateUI();
                     easyMap();

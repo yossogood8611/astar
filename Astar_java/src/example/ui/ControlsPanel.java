@@ -17,22 +17,22 @@ public class ControlsPanel extends JPanel {
     public static final String TIME_20 = "Time: 2";
     private AStarAlgorithm algorithm;
     public static SelectionType selectionType;
-    private LevelType levelType;
+    public static LevelType levelType;
 
     private JComboBox<String> selector;
     private GridPanel canvas;
 
     public Timer timer;
-    JLabel timerLabel;
-    JLabel lifeLabel;
+    public static JLabel timerLabel;
+    public static JLabel lifeLabel;
     public static JTextField setSpeedText;
     public static JTextField setTimeText;
     public static JTextField setLifeText;
     public static JTable rankList;
 
-    int remainingTime;
+    public static JScrollPane scrollPane;
 
-    LevelType levelState;
+    int remainingTime;
 
     private int lifeCount = 3;
 
@@ -40,11 +40,11 @@ public class ControlsPanel extends JPanel {
         timer.stop();
         canvas.timer.stop();
         canvas.pathTimer.stop();
-        timerLabel.setText(TIME_60);
         lifeCount = 3;
         lifeLabel.setText("Life: " + lifeCount);
         algorithm.reset();
         algorithm.updateUI();
+        timerLabel.setText(TIME_60);
     }
 
     public void lifeDown() {
@@ -78,7 +78,6 @@ public class ControlsPanel extends JPanel {
         this.algorithm = algorithm;
         this.selectionType = SelectionType.START;
         this.levelType = LevelType.EASY;
-        this.levelState = LevelType.EASY;
 
         setBorder(new LineBorder(Color.gray));
         setLayout(null);
@@ -127,7 +126,7 @@ public class ControlsPanel extends JPanel {
         setTimeText.setBounds(10, height + 55, 85, 30);
         add(setTimeText);
 
-        Label lifeLabelText = new Label("life:");
+        Label lifeLabelText = new Label("Life: ");
         lifeLabelText.setBounds(105, height + 40, 30, 10);
         add(lifeLabelText);
         setLifeText = new JTextField();
@@ -146,7 +145,7 @@ public class ControlsPanel extends JPanel {
             timer.stop();
             timerLabel.setText(TIME_60);
             lifeCount = 3;
-            lifeLabel.setText("life: " + lifeCount);
+            lifeLabel.setText("Life: " + lifeCount);
         });
         add(reset);
 
@@ -163,11 +162,7 @@ public class ControlsPanel extends JPanel {
         });
         add(start);
 
-        rankList = new JTable(GridPanel.contents, GridPanel.header);
-        rankList.disable();
-        JScrollPane scrollPane = new JScrollPane(rankList);
-        scrollPane.setBounds(10, 330, width - 20, 260);
-        add(scrollPane);
+        add(putRank());
 
         // Inside the ControlsPanel constructor
         timerLabel = new JLabel(TIME_20); // Initial time can be set to 60 seconds
@@ -180,20 +175,20 @@ public class ControlsPanel extends JPanel {
                 remainingTime--;
                 timerLabel.setText("Time: " + remainingTime);
                 if (remainingTime == 0) {
+                    canvas.showEndGameDialog(true);
                     timer.stop();
                     canvas.timer.stop();
                     canvas.pathTimer.stop();
                     canvas.RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
-                    canvas.showEndGameDialog(true);
                     canvas.easyMap();
                     selectionType = SelectionType.START;
-                    timerLabel.setText(TIME_60);
                     lifeCount = 3;
-                    lifeLabel.setText("life: " + lifeCount);
+                    lifeLabel.setText("Life: " + lifeCount);
                     algorithm.reset();
                     algorithm.updateUI();
                     canvas.easyMap();
+                    timerLabel.setText(TIME_60);
                 }
             }
         });
@@ -201,6 +196,16 @@ public class ControlsPanel extends JPanel {
         lifeLabel = new JLabel("Life: " + lifeCount); // Initial life count can be set to 3
         lifeLabel.setBounds(130, height + 130, 80, 30);
         add(lifeLabel);
+    }
+
+    public JScrollPane putRank() {
+        rankList = new JTable(GridPanel.contents, GridPanel.header);
+        rankList.disable();
+        JScrollPane scrollPane = new JScrollPane(rankList);
+        scrollPane.setBounds(10, 320, 180, 270);
+        add(scrollPane);
+
+        return scrollPane;
     }
 
     public void selectTile(Tile t) {
