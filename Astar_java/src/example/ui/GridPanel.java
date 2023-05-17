@@ -18,6 +18,7 @@ import example.element.Grid;
 import example.element.Tile;
 
 import static example.element.Tile.TILE_SIZE;
+import static example.ui.ControlsPanel.lifeLabel;
 
 public class GridPanel extends JPanel implements Observer {
 
@@ -47,7 +48,6 @@ public class GridPanel extends JPanel implements Observer {
     public KeyAdapter userMovement;
     public Timer itemTimer;
     public Tile item;
-
     public static String[] header = {"난이도", "남은 시간", "남은 생명"};
     public static String[][] contents = new String[50][4]; //{{"Hard", "60", "3", "321223(점수)"}};
     public static int contentSize = 0;
@@ -116,6 +116,9 @@ public class GridPanel extends JPanel implements Observer {
             public void actionPerformed(ActionEvent e) {
                 Tile randomEmptyTile = grid.findEmptyTile();
                 if (randomEmptyTile != null) {
+                    if (item == null) {
+                        return;
+                    }
                     item.setCheck(false);
                     item.setX(randomEmptyTile.getX());
                     item.setY(randomEmptyTile.getY());
@@ -414,8 +417,8 @@ public class GridPanel extends JPanel implements Observer {
             if (!item.isCheck()) {
                 g.setColor(Color.ORANGE);
                 g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
-            }else {
-                g.setColor(new Color(238,238,238));
+            } else {
+                g.setColor(new Color(238, 238, 238));
                 g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
 
             }
@@ -472,7 +475,6 @@ public class GridPanel extends JPanel implements Observer {
     public void setCheck(boolean check) {
         this.check = check;
     }
-
 
     public void startMap(Grid grid) {
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
