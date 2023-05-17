@@ -16,6 +16,27 @@ public class ControlsPanel extends JPanel {
     private JComboBox<String> selector;
     private GridPanel canvas;
 
+    private Timer timer;
+    JLabel timerLabel;
+    JLabel lifeLabel;
+
+    int lifeCount = 3;
+
+    public int getLifeCount(){
+        return this.lifeCount;
+    }
+
+    public Timer getTimer(){
+        return this.timer;
+    }
+    public void setLifeCount(int lifeCount){
+       this.lifeCount = lifeCount;
+    }
+
+    public void setTimer(Timer timer){
+        this.timer = timer;
+    }
+
     public ControlsPanel(int width, int height, AStarAlgorithm algorithm) {
 
         this.algorithm = algorithm;
@@ -38,23 +59,59 @@ public class ControlsPanel extends JPanel {
         });
         add(selector);
 
+        JComboBox<String> levelSelector = new JComboBox<>();
+        levelSelector.addItem("Easy");
+        levelSelector.addItem("Medium");
+        levelSelector.addItem("Hard");
+        levelSelector.setBounds(10, height - 50, width - 20, 30);
+        levelSelector.addActionListener((ActionEvent e) -> {
+            String selectedLevel = (String) levelSelector.getSelectedItem();
+           });
+        add(levelSelector);
+
+
         JButton reset = new JButton("Reset");
-        reset.setBounds(10, height - 40, 80, 30);
+        reset.setBounds(10, height - 15, 80, 30);
         reset.addActionListener((ActionEvent ae) -> {
             algorithm.reset();
             algorithm.updateUI();
             selectionType = SelectionType.START;
+            timer.stop();
+            timerLabel.setText("Time: 60");
+            lifeCount = 3;
+            lifeLabel.setText("life: " + lifeCount);
         });
         add(reset);
 
         JButton start = new JButton("Start");
-        start.setBounds(110, height - 40, 80, 30);
+        start.setBounds(110, height - 15, 80, 30);
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
             canvas.startUserMovement(algorithm, algorithm.getNetwork());
             canvas.disableMouseEvents();
+            timer.start();
         });
         add(start);
+
+        // Inside the ControlsPanel constructor
+        timerLabel = new JLabel("Time: 60"); // Initial time can be set to 60 seconds
+        timerLabel.setBounds(20, height+20 , 80, 30);
+        add(timerLabel);
+
+        timer = new Timer(1000, (ActionEvent e) -> {
+            int remainingTime = Integer.parseInt(timerLabel.getText().replace("Time: ", ""));
+            remainingTime--;
+            timerLabel.setText("Time: " + remainingTime);
+            if (remainingTime == 0) {
+                // Handle time's up logic
+                // Stop the timer or perform any necessary actions
+            }
+        });
+
+        // Inside the ControlsPanel constructor
+        lifeLabel = new JLabel("Life: " + lifeCount); // Initial life count can be set to 3
+        lifeLabel.setBounds(120, height+20 , 80, 30);
+        add(lifeLabel);
     }
 
     public void selectTile(Tile t) {

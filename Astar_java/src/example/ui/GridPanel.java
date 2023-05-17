@@ -100,6 +100,8 @@ public class GridPanel extends JPanel implements Observer {
                     if (user != null) {
                         if (y == 0) {
                             System.out.println("범위 벗어남");
+                            controls.setLifeCount(controls.getLifeCount()-1);
+                            controls.lifeLabel.setText("Life: " + controls.getLifeCount());
                             return;
                         }
                         user = new Tile(x, y - 1);
@@ -109,6 +111,8 @@ public class GridPanel extends JPanel implements Observer {
                     if (user != null) {
                         if (y == TILE_SIZE-1) {
                             System.out.println("범위 벗어남");
+                            controls.setLifeCount(controls.getLifeCount()-1);
+                            controls.lifeLabel.setText("Life: " + controls.getLifeCount());
                             return;
                         }
                         user = new Tile(x, y + 1);
@@ -118,6 +122,8 @@ public class GridPanel extends JPanel implements Observer {
                     if (user != null) {
                         if (x == 0) {
                             System.out.println("범위 벗어남");
+                            controls.setLifeCount(controls.getLifeCount()-1);
+                            controls.lifeLabel.setText("Life: " + controls.getLifeCount());
                             return;
                         }
                         user = new Tile(x - 1, y);
@@ -127,6 +133,8 @@ public class GridPanel extends JPanel implements Observer {
                     if (user != null) {
                         if (x == TILE_SIZE-1) {
                             System.out.println("범위 벗어남");
+                            controls.setLifeCount(controls.getLifeCount()-1);
+                            controls.lifeLabel.setText("Life: " + controls.getLifeCount());
                             return;
                         }
                         user = new Tile(x + 1, y);
