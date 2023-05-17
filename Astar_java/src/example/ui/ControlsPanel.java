@@ -105,6 +105,7 @@ public class ControlsPanel extends JPanel {
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
             canvas.startUserMovement();
+            canvas.setCheck(false);
             canvas.disableMouseEvents();
             timer.start();
         });
