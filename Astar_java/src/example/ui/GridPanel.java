@@ -18,27 +18,29 @@ import static example.element.Tile.TILE_SIZE;
 
 public class GridPanel extends JPanel implements Observer {
 
+    private boolean check=true;
+
     private Grid grid;
+
     private ArrayList<Tile> path;
-
     private Tile user;
-    private Tile monster;
 
+    private Tile monster;
     private ControlsPanel controls;
 
     private BasicStroke defaultStroke;
-    private BasicStroke widerStroke;
 
+    private BasicStroke widerStroke;
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
+
     private Timer pathTimer; // 경로 이동 타이머
-
     private int currentIndex = 0;
+
     private Timer timer;
-
     private AStarAlgorithm algorithm;
-    private KeyAdapter userMovement;
 
+    private KeyAdapter userMovement;
     public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
         this.controls = controls;
 
@@ -51,6 +53,9 @@ public class GridPanel extends JPanel implements Observer {
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
+                if(!check){
+                    return;
+                }
                 int x = evt.getX();
                 int y = evt.getY();
 
@@ -77,6 +82,7 @@ public class GridPanel extends JPanel implements Observer {
                     timer.stop();
                     removeKeyListener(userMovement);
                     System.out.println("게임이 끝났습니다.");
+                    check=true;
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
                     showEndGameDialog(false);
@@ -196,6 +202,7 @@ public class GridPanel extends JPanel implements Observer {
                     removeKeyListener(userMovement);
                     System.out.println("게임이 끝났습니다.");
                     setRequestFocusEnabled(false);
+                    check=false;
                     controls.resetGameSetting();
                     showEndGameDialog(false);
                 }
@@ -294,5 +301,13 @@ public class GridPanel extends JPanel implements Observer {
         }
 
         repaint();
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
     }
 }
