@@ -51,7 +51,7 @@ public class ControlsPanel extends JPanel {
         start.setBounds(110, height - 40, 80, 30);
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
-            canvas.startUserMovement(algorithm, algorithm.getNetwork());
+            canvas.startUserMovement();
             canvas.disableMouseEvents();
         });
         add(start);

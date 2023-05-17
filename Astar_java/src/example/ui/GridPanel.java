@@ -36,11 +36,14 @@ public class GridPanel extends JPanel implements Observer {
     private int currentIndex = 0;
     private Timer timer;
 
-    public GridPanel(ControlsPanel controls) {
+    private AStarAlgorithm algorithm;
+
+    public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
         this.controls = controls;
 
         this.defaultStroke = new BasicStroke();
         this.widerStroke = new BasicStroke(2);
+        this.algorithm = algorithm;
 
         setBorder(new LineBorder(Color.gray));
 
@@ -76,7 +79,7 @@ public class GridPanel extends JPanel implements Observer {
         });
     }
 
-    public void startUserMovement(AStarAlgorithm algorithm, Network network) {
+    public void startUserMovement() {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -94,7 +97,7 @@ public class GridPanel extends JPanel implements Observer {
                     }
                 } else if (keyCode == KeyEvent.VK_DOWN) {
                     if (user != null) {
-                        if (y == TILE_SIZE-1) {
+                        if (y == TILE_SIZE - 1) {
                             System.out.println("범위 벗어남");
                             return;
                         }
@@ -112,7 +115,7 @@ public class GridPanel extends JPanel implements Observer {
                     }
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
                     if (user != null) {
-                        if (x == TILE_SIZE-1) {
+                        if (x == TILE_SIZE - 1) {
                             System.out.println("범위 벗어남");
                             return;
                         }
@@ -120,8 +123,8 @@ public class GridPanel extends JPanel implements Observer {
                         repaint();
                     }
                 }
-                user.calculateNeighbours(network);
-                algorithm.reset(user, monster, network);
+                user.calculateNeighbours(algorithm.getNetwork());
+                algorithm.reset(user, monster, algorithm.getNetwork());
                 algorithm.solve();
             }
         });

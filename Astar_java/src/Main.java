@@ -52,7 +52,7 @@ public class Main {
         controls = new ControlsPanel(controlsW, 120, astar);
         controls.setBounds(w + (margin * 2), margin, controlsW, h);
 
-        canvas = new GridPanel(controls);
+        canvas = new GridPanel(controls, astar);
         canvas.setBounds(margin, margin, w, h);
 
         controls.setGridPanel(canvas);
