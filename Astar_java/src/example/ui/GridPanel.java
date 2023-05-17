@@ -103,15 +103,11 @@ public class GridPanel extends JPanel implements Observer {
                 if (keyCode == KeyEvent.VK_UP) {
                     if (user != null) {
                         if (y == 0) {
-                            System.out.println("범위 벗어남");
-                            controls.lifeDown();
-                            if(controls.isLifeZero()){
-                                timer.stop();
-                                removeKeyListener(userMovement);
-                                System.out.println("게임이 끝났습니다.");
-                                setRequestFocusEnabled(false);
-                                controls.resetGameSetting();
-                            }
+                            lifeDown();
+                            return;
+                        }
+                        if (!grid.find(x, y - 1).isValid()) {
+                            lifeDown();
                             return;
                         }
                         user = new Tile(x, y - 1);
@@ -120,15 +116,11 @@ public class GridPanel extends JPanel implements Observer {
                 } else if (keyCode == KeyEvent.VK_DOWN) {
                     if (user != null) {
                         if (y == TILE_SIZE - 1) {
-                            System.out.println("범위 벗어남");
-                            controls.lifeDown();
-                            if(controls.isLifeZero()){
-                                timer.stop();
-                                removeKeyListener(userMovement);
-                                System.out.println("게임이 끝났습니다.");
-                                setRequestFocusEnabled(false);
-                                controls.resetGameSetting();
-                            }
+                            lifeDown();
+                            return;
+                        }
+                        if (!grid.find(x, y + 1).isValid()) {
+                            lifeDown();
                             return;
                         }
                         user = new Tile(x, y + 1);
@@ -137,15 +129,11 @@ public class GridPanel extends JPanel implements Observer {
                 } else if (keyCode == KeyEvent.VK_LEFT) {
                     if (user != null) {
                         if (x == 0) {
-                            System.out.println("범위 벗어남");
-                            controls.lifeDown();
-                            if(controls.isLifeZero()){
-                                timer.stop();
-                                removeKeyListener(userMovement);
-                                System.out.println("게임이 끝났습니다.");
-                                setRequestFocusEnabled(false);
-                                controls.resetGameSetting();
-                            }
+                            lifeDown();
+                            return;
+                        }
+                        if (!grid.find(x - 1, y).isValid()) {
+                            lifeDown();
                             return;
                         }
                         user = new Tile(x - 1, y);
@@ -154,15 +142,11 @@ public class GridPanel extends JPanel implements Observer {
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
                     if (user != null) {
                         if (x == TILE_SIZE - 1) {
-                            System.out.println("범위 벗어남");
-                            controls.lifeDown();
-                            if(controls.isLifeZero()){
-                                timer.stop();
-                                removeKeyListener(userMovement);
-                                System.out.println("게임이 끝났습니다.");
-                                setRequestFocusEnabled(false);
-                                controls.resetGameSetting();
-                            }
+                            lifeDown();
+                            return;
+                        }
+                        if (!grid.find(x + 1, y).isValid()) {
+                            lifeDown();
                             return;
                         }
                         user = new Tile(x + 1, y);
@@ -172,6 +156,22 @@ public class GridPanel extends JPanel implements Observer {
                 user.calculateNeighbours(algorithm.getNetwork());
                 algorithm.reset(user, monster);
                 algorithm.solve();
+            }
+
+            private void lifeDown() {
+                System.out.println("범위 벗어남");
+                controls.lifeDown();
+                gameOver();
+            }
+
+            private void gameOver() {
+                if(controls.isLifeZero()){
+                    timer.stop();
+                    removeKeyListener(userMovement);
+                    System.out.println("게임이 끝났습니다.");
+                    setRequestFocusEnabled(false);
+                    controls.resetGameSetting();
+                }
             }
         };
         return UserMovement;
