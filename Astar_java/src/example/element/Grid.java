@@ -2,7 +2,9 @@ package example.element;
 
 import pathfinding.element.Network;
 import pathfinding.element.Node;
-
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 import java.util.ArrayList;
 
 public class Grid extends Network {
@@ -32,6 +34,20 @@ public class Grid extends Network {
         for (Tile t : tiles) {
             if (t.getX() == x && t.getY() == y)
                 return t;
+        }
+        return null;
+    }
+
+    public Tile findEmptyTile(){
+        List<Tile> emptyTiles = new ArrayList<>();
+        for (Tile t : tiles) {
+            if (t.isValid()) {
+                emptyTiles.add(t);
+            }
+        }
+        if (!emptyTiles.isEmpty()) {
+            Collections.shuffle(emptyTiles, new Random());
+            return emptyTiles.get(0);
         }
         return null;
     }
