@@ -89,6 +89,20 @@ public class GridPanel extends JPanel implements Observer {
         setFocusable(true);
         requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
 
+        pathTimer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (path != null && currentIndex < path.size()) {
+                    monster = path.get(currentIndex);
+                    currentIndex++;
+                    repaint();
+                } else {
+                    pathTimer.stop();
+                }
+            }
+        });
+        pathTimer.start();
+
     }
 
     public KeyAdapter getUserMoveMent(AStarAlgorithm algorithm, Network network) {
