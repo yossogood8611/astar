@@ -48,10 +48,12 @@ public class GridPanel extends JPanel implements Observer {
 
     public KeyAdapter userMovement;
 
+    public Timer itemTimer;
+    public Tile item;
+
     public void RemoveKeyListener() {
         removeKeyListener(userMovement);
     }
-
 
     public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
         this.controls = controls;
@@ -59,6 +61,8 @@ public class GridPanel extends JPanel implements Observer {
         this.defaultStroke = new BasicStroke();
         this.widerStroke = new BasicStroke(2);
         this.algorithm = algorithm;
+
+        this.item = new Tile(0,0);
 
         setBorder(new LineBorder(Color.gray));
 
@@ -88,6 +92,8 @@ public class GridPanel extends JPanel implements Observer {
                     repaint();
                 } else {
                     timer.stop();
+                    itemTimer.stop();
+                    item=null;
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
@@ -97,6 +103,19 @@ public class GridPanel extends JPanel implements Observer {
                     algorithm.reset();
                     algorithm.updateUI();
                     easyMap();
+                }
+            }
+        });
+
+        itemTimer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Tile randomEmptyTile = grid.findEmptyTile();
+                if (randomEmptyTile != null) {
+                    item.setX(randomEmptyTile.getX());
+                    item.setY(randomEmptyTile.getY());
+                } else {
+                    System.out.println("No empty tile found.");
                 }
             }
         });
@@ -149,7 +168,10 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
+                    //잡혔을 때
                     timer.stop();
+                    itemTimer.stop();
+                    item=null;
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
@@ -231,6 +253,9 @@ public class GridPanel extends JPanel implements Observer {
                         repaint();
                     }
                 }
+                if(x==item.getX() && y == item.getY()){
+                    
+                }
                 user.calculateNeighbours(algorithm.getNetwork());
                 algorithm.reset(user, monster);
                 algorithm.solve();
@@ -246,6 +271,8 @@ public class GridPanel extends JPanel implements Observer {
                 if (controls.isLifeZero()) {
                     pathTimer.stop();
                     timer.stop();
+                    itemTimer.stop();
+                    item=null;
 
                     RemoveKeyListener();
                     algorithm.reset();
@@ -335,6 +362,11 @@ public class GridPanel extends JPanel implements Observer {
                     g.fillRoundRect(x, y, 20, 20, 10, 10);
                 }
             }
+        }
+
+        if(itemTimer.isRunning()){
+            g.setColor(Color.ORANGE);
+            g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
         }
 
         g.drawRect(getWidth() - 1, 0, 1, getHeight());
