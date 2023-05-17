@@ -36,6 +36,8 @@ public class GridPanel extends JPanel implements Observer {
     private int currentIndex = 0;
     private Timer timer;
 
+    private KeyAdapter userMovement;
+
     public GridPanel(ControlsPanel controls) {
         this.controls = controls;
 
@@ -71,13 +73,23 @@ public class GridPanel extends JPanel implements Observer {
                     repaint();
                 } else {
                     timer.stop();
+                    removeKeyListener(userMovement);
+                    System.out.println("게임이 끝났습니다.");
                 }
             }
         });
     }
 
     public void startUserMovement(AStarAlgorithm algorithm, Network network) {
-        addKeyListener(new KeyAdapter() {
+        userMovement =getUserMoveMent(algorithm, network);
+        addKeyListener(userMovement);
+        setFocusable(true);
+        requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
+
+    }
+
+    public KeyAdapter getUserMoveMent(AStarAlgorithm algorithm, Network network) {
+        KeyAdapter UserMovement = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyCode();
@@ -124,9 +136,8 @@ public class GridPanel extends JPanel implements Observer {
                 algorithm.reset(user, monster, network);
                 algorithm.solve();
             }
-        });
-        setFocusable(true);
-        requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
+        };
+        return UserMovement;
     }
 
     public void disableMouseEvents() {
