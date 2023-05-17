@@ -48,7 +48,9 @@ public class GridPanel extends JPanel implements Observer {
     public KeyAdapter userMovement;
     public Timer itemTimer;
     public Tile item;
-  
+
+    private Image backImage;
+
     public static String[] header = {"난이도", "남은 시간", "남은 생명"};
     public static String[][] contents = new String[50][4]; //{{"Hard", "60", "3", "321223(점수)"}};
     public static int contentSize = 0;
@@ -64,7 +66,7 @@ public class GridPanel extends JPanel implements Observer {
         this.widerStroke = new BasicStroke(2);
         this.algorithm = algorithm;
 
-        this.item = new Tile(0,0);
+        this.item = new Tile(0, 0);
 
         setBorder(new LineBorder(Color.gray));
 
@@ -98,7 +100,7 @@ public class GridPanel extends JPanel implements Observer {
 
                     timer.stop();
                     itemTimer.stop();
-                    item=null;
+                    item = null;
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
@@ -117,7 +119,7 @@ public class GridPanel extends JPanel implements Observer {
             public void actionPerformed(ActionEvent e) {
                 Tile randomEmptyTile = grid.findEmptyTile();
                 if (randomEmptyTile != null) {
-                    if(item==null){
+                    if (item == null) {
                         return;
                     }
                     item.setX(randomEmptyTile.getX());
@@ -153,7 +155,7 @@ public class GridPanel extends JPanel implements Observer {
         setRank();
 
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
-        setBackground(new Color(238,238,238));
+        setBackground(new Color(238, 238, 238));
     }
 
     private void setRank() {
@@ -213,7 +215,7 @@ public class GridPanel extends JPanel implements Observer {
 
                     timer.stop();
                     itemTimer.stop();
-                    item=null;
+                    item = null;
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     check = true;
@@ -290,9 +292,9 @@ public class GridPanel extends JPanel implements Observer {
                         repaint();
                     }
                 }
-                if(item==null){
+                if (item == null) {
                     return;
-                }else{
+                } else {
 
                 }
 
@@ -315,7 +317,7 @@ public class GridPanel extends JPanel implements Observer {
                     pathTimer.stop();
                     timer.stop();
                     itemTimer.stop();
-                    item=null;
+                    item = null;
 
                     RemoveKeyListener();
                     algorithm.reset();
@@ -345,6 +347,10 @@ public class GridPanel extends JPanel implements Observer {
     @Override
     protected void paintComponent(Graphics g1) {
         super.paintComponent(g1);
+
+        ImageIcon background = new ImageIcon("grass.jpg");
+        backImage = background.getImage();
+        g1.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
 
         Graphics2D g = (Graphics2D) g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -407,8 +413,8 @@ public class GridPanel extends JPanel implements Observer {
             }
         }
 
-        if(itemTimer.isRunning()){
-            if(item==null){
+        if (itemTimer.isRunning()) {
+            if (item == null) {
                 return;
             }
             g.setColor(Color.ORANGE);
