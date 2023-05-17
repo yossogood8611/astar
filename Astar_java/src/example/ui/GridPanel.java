@@ -180,14 +180,17 @@ public class GridPanel extends JPanel implements Observer {
                     }
                 } else if (keyCode == KeyEvent.VK_DOWN) {
                     if (user != null) {
-                        if (y == TILE_SIZE - 1) {
+                        if (y > 18) {
                             lifeDown();
                             return;
                         }
-                        if (!grid.find(x, y + 1).isValid()) {
-                            lifeDown();
-                            return;
-                        }
+
+                            if (!grid.find(x, y + 1).isValid()) {
+                                lifeDown();
+                                return;
+                            }
+
+
                         user = new Tile(x, y + 1);
                         repaint();
                     }
@@ -206,7 +209,7 @@ public class GridPanel extends JPanel implements Observer {
                     }
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
                     if (user != null) {
-                        if (x == TILE_SIZE - 1) {
+                        if (x > 18) {
                             lifeDown();
                             return;
                         }
@@ -214,6 +217,8 @@ public class GridPanel extends JPanel implements Observer {
                             lifeDown();
                             return;
                         }
+
+
                         user = new Tile(x + 1, y);
                         repaint();
                     }
