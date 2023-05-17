@@ -1,5 +1,6 @@
 package example.ui;
 
+import example.element.Grid;
 import example.element.Tile;
 import pathfinding.AStarAlgorithm;
 
@@ -27,6 +28,7 @@ public class ControlsPanel extends JPanel {
     public static JTextField setSpeedText;
     public static JTextField setTimeText;
     public static JTextField setLifeText;
+    public static JTable rankList;
 
     int remainingTime;
 
@@ -160,6 +162,12 @@ public class ControlsPanel extends JPanel {
             timer.start();
         });
         add(start);
+
+        rankList = new JTable(GridPanel.contents, GridPanel.header);
+        rankList.disable();
+        JScrollPane scrollPane = new JScrollPane(rankList);
+        scrollPane.setBounds(10, 330, width - 20, 260);
+        add(scrollPane);
 
         // Inside the ControlsPanel constructor
         timerLabel = new JLabel(TIME_20); // Initial time can be set to 60 seconds

@@ -48,6 +48,9 @@ public class GridPanel extends JPanel implements Observer {
 
     public KeyAdapter userMovement;
 
+    public static String[] header = {"순위", "생존 시간", "난이도"};
+    public static ArrayList[][] contents = new ArrayList[100][3]; //{{"1", "60", "Hard"}}
+
     public void RemoveKeyListener() {
         removeKeyListener(userMovement);
     }
@@ -149,8 +152,16 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
-                    pathTimer.stop();
                     timer.stop();
+                    RemoveKeyListener();
+                    System.out.println("게임이 끝났습니다.");
+                    check = true;
+                    setRequestFocusEnabled(false);
+                    controls.resetGameSetting();
+                    showEndGameDialog(false);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    easyMap();
                 }
             }
         });
@@ -380,9 +391,7 @@ public class GridPanel extends JPanel implements Observer {
         this.check = check;
     }
 
-
     public void startMap(Grid grid) {
-        algorithm.reset();
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
         this.grid = grid;
         easyMap();
