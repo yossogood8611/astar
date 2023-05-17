@@ -20,7 +20,24 @@ public class ControlsPanel extends JPanel {
     JLabel timerLabel;
     JLabel lifeLabel;
 
-    int lifeCount = 3;
+    private int lifeCount = 3;
+
+    public void resetGameSetting(){
+        timer.stop();
+        timerLabel.setText("Time: 60");
+        lifeCount = 3;
+        lifeLabel.setText("Life: " + lifeCount);
+    }
+
+    public void lifeDown(){
+        this.lifeCount--;
+        this.lifeLabel.setText("Life: " + this.lifeCount);
+    }
+
+    public boolean isLifeZero(){
+        if(lifeCount==0) return true;
+        else return false;
+    }
 
     public int getLifeCount(){
         return this.lifeCount;
