@@ -178,6 +178,7 @@ public class ControlsPanel extends JPanel {
                     canvas.RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     canvas.showEndGameDialog(true);
+                    canvas.easyMap();
                     selectionType = SelectionType.START;
                     timerLabel.setText(TIME_60);
                     lifeCount = 3;

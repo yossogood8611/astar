@@ -2,7 +2,6 @@
 import example.element.Grid;
 import example.element.Tile;
 import example.ui.ControlsPanel;
-import example.ui.CreateMap;
 import example.ui.GridPanel;
 import example.ui.MainFrame;
 import pathfinding.AStarAlgorithm;
@@ -18,7 +17,6 @@ public class Main {
     private static MainFrame frame;
     private static JPanel container;
     private static GridPanel canvas;
-    private static CreateMap createMap;
     private static ControlsPanel controls;
 
     private static AStarAlgorithm astar;
@@ -59,9 +57,6 @@ public class Main {
 
         canvas = new GridPanel(controls, astar);
         canvas.setBounds(margin, margin, w, h);
-
-        createMap = new CreateMap(canvas);
-        canvas.setCreateMap(createMap);
 
         controls.setGridPanel(canvas);
 

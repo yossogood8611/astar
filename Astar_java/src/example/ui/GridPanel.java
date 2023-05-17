@@ -36,7 +36,6 @@ public class GridPanel extends JPanel implements Observer {
     private BasicStroke defaultStroke;
 
     private BasicStroke widerStroke;
-    private CreateMap createMap;
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
 
@@ -186,11 +185,10 @@ public class GridPanel extends JPanel implements Observer {
                             return;
                         }
 
-                            if (!grid.find(x, y + 1).isValid()) {
-                                lifeDown();
-                                return;
-                            }
-
+                        if (!grid.find(x, y + 1).isValid()) {
+                            lifeDown();
+                            return;
+                        }
 
                         user = new Tile(x, y + 1);
                         repaint();
@@ -382,9 +380,6 @@ public class GridPanel extends JPanel implements Observer {
         this.check = check;
     }
 
-    public void setCreateMap(CreateMap createMap) {
-        this.createMap = createMap;
-    }
 
     public void startMap(Grid grid) {
         algorithm.reset();
