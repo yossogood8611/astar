@@ -115,13 +115,17 @@ public class GridPanel extends JPanel implements Observer {
         String title;
         if (isGameWon) {
             message = "Congratulations! You won the game.";
-            title="You Win";
+            title = "You Win";
         } else {
-            message = "Game Over. You lost the game.";
-            title="Game Over";
+            message = "Game Over. You lose the game.";
+            title = "Game Over";
         }
 
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showCanNotBuild() {
+        JOptionPane.showMessageDialog(this, "생성 불가능 합니다.", "warning", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void startUserMovement(ControlsPanel.LevelType levelType) {
@@ -196,10 +200,10 @@ public class GridPanel extends JPanel implements Observer {
                             return;
                         }
 
-                            if (!grid.find(x, y + 1).isValid()) {
-                                lifeDown();
-                                return;
-                            }
+                        if (!grid.find(x, y + 1).isValid()) {
+                            lifeDown();
+                            return;
+                        }
 
 
                         user = new Tile(x, y + 1);
@@ -259,8 +263,6 @@ public class GridPanel extends JPanel implements Observer {
                     check = false;
                     controls.resetGameSetting();
                     showEndGameDialog(false);
-                    algorithm.reset();
-                    algorithm.updateUI();
                     easyMap();
                 }
             }

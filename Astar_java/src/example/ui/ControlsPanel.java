@@ -197,22 +197,34 @@ public class ControlsPanel extends JPanel {
     public void selectTile(Tile t) {
         switch (selectionType) {
             case START:
-                algorithm.setStart(t);
-                selectionType = SelectionType.END;
-                selector.setSelectedIndex(1);
+                if (t.isValid()) {
+                    algorithm.setStart(t);
+                    selectionType = SelectionType.END;
+                    selector.setSelectedIndex(1);
+                } else {
+                    canvas.showCanNotBuild();
+                }
                 break;
             case END:
-                algorithm.setEnd(t);
-                selectionType = SelectionType.REVERSE;
-                try {
+                if (t.isValid()) {
+                    algorithm.setEnd(t);
+                    selectionType = SelectionType.REVERSE;
                     selector.setSelectedIndex(2);
-                } catch (Exception e) {
-
+                } else {
+                    canvas.showCanNotBuild();
                 }
-
                 break;
             default:
-                t.reverseValidation();
+                Tile start = (Tile) algorithm.getStart();
+                Tile end = (Tile) algorithm.getEnd();
+                if(start==null||end==null){
+                    t.reverseValidation();
+                }
+                if(((t.getX()==start.getX())&&(t.getY()==start.getY()))||((t.getX()==end.getX())&&(t.getY()==end.getY()))){
+                    canvas.showCanNotBuild();
+                }else {
+                    t.reverseValidation();
+                }
                 break;
         }
 
