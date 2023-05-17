@@ -133,7 +133,7 @@ public class GridPanel extends JPanel implements Observer {
                     }
                 }
                 user.calculateNeighbours(network);
-                algorithm.reset(user, monster, network);
+                algorithm.reset(user, monster);
                 algorithm.solve();
             }
         };
