@@ -56,8 +56,6 @@ public class Main {
 
         canvas = new GridPanel(controls, astar);
         canvas.setBounds(margin, margin, w, h);
-
-
         controls.setGridPanel(canvas);
 
         container.add(controls);
