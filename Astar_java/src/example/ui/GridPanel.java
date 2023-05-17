@@ -37,6 +37,7 @@ public class GridPanel extends JPanel implements Observer {
     private Timer pathTimer; // 경로 이동 타이머
     private int currentIndex = 0;
 
+
     private Timer timer;
     private AStarAlgorithm algorithm;
 
@@ -102,13 +103,18 @@ public class GridPanel extends JPanel implements Observer {
         JOptionPane.showMessageDialog(this, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void startUserMovement() {
+    public void startUserMovement(ControlsPanel.LevelType levelType) {
         userMovement = getUserMoveMent(algorithm, algorithm.getNetwork());
         addKeyListener(userMovement);
         setFocusable(true);
         requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
-
-        pathTimer = new Timer(500, new ActionListener() {
+        int speed=500;
+        switch (levelType){
+            case EASY:speed=500; break;
+            case NORMAL:speed=250; break;
+            case HARD:speed=100; break;
+        }
+        pathTimer = new Timer(speed, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (path != null && currentIndex < path.size()) {
