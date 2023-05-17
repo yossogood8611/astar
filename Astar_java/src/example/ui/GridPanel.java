@@ -18,7 +18,7 @@ import static example.element.Tile.TILE_SIZE;
 
 public class GridPanel extends JPanel implements Observer {
 
-    private boolean check=true;
+    private boolean check = true;
 
     private Grid grid;
 
@@ -31,6 +31,7 @@ public class GridPanel extends JPanel implements Observer {
     private BasicStroke defaultStroke;
 
     private BasicStroke widerStroke;
+    private CreateMap createMap;
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
 
@@ -42,6 +43,7 @@ public class GridPanel extends JPanel implements Observer {
     private AStarAlgorithm algorithm;
 
     private KeyAdapter userMovement;
+
     public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
         this.controls = controls;
 
@@ -54,20 +56,13 @@ public class GridPanel extends JPanel implements Observer {
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                if(!check){
+                if (!check) {
                     return;
                 }
                 int x = evt.getX();
                 int y = evt.getY();
 
-                int tileX = x / TILE_SIZE;
-                int tileY = y / TILE_SIZE;
-
-                Tile t = grid.find(tileX, tileY);
-
-                if (t != null) {
-                    controls.selectTile(t);
-                }
+                createWall(x, y);
             }
         });
 
@@ -83,12 +78,23 @@ public class GridPanel extends JPanel implements Observer {
                     timer.stop();
                     removeKeyListener(userMovement);
                     System.out.println("게임이 끝났습니다.");
-                    check=true;
+                    check = true;
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
                 }
             }
         });
+    }
+
+    public void createWall(int x, int y) {
+        int tileX = x / TILE_SIZE;
+        int tileY = y / TILE_SIZE;
+
+        Tile t = grid.find(tileX, tileY);
+
+        if (t != null) {
+            controls.selectTile(t);
+        }
     }
 
     public void showEndGameDialog(boolean isGameWon) {
@@ -107,11 +113,17 @@ public class GridPanel extends JPanel implements Observer {
         addKeyListener(userMovement);
         setFocusable(true);
         requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
-        int speed=500;
-        switch (levelType){
-            case EASY:speed=500; break;
-            case NORMAL:speed=250; break;
-            case HARD:speed=100; break;
+        int speed = 500;
+        switch (levelType) {
+            case EASY:
+                speed = 500;
+                break;
+            case NORMAL:
+                speed = 250;
+                break;
+            case HARD:
+                speed = 100;
+                break;
         }
         pathTimer = new Timer(speed, new ActionListener() {
             @Override
@@ -202,13 +214,13 @@ public class GridPanel extends JPanel implements Observer {
             }
 
             private void gameOver() {
-                if(controls.isLifeZero()){
+                if (controls.isLifeZero()) {
                     pathTimer.stop();
                     timer.stop();
                     removeKeyListener(userMovement);
                     System.out.println("게임이 끝났습니다.");
                     setRequestFocusEnabled(false);
-                    check=false;
+                    check = false;
                     controls.resetGameSetting();
                     showEndGameDialog(false);
                 }
@@ -315,5 +327,13 @@ public class GridPanel extends JPanel implements Observer {
 
     public void setCheck(boolean check) {
         this.check = check;
+    }
+
+    public void setCreateMap(CreateMap createMap) {
+        this.createMap = createMap;
+    }
+
+    private void createMap(){
+        createMap.easyMap();
     }
 }
