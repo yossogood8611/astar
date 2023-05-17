@@ -39,11 +39,11 @@ public class GridPanel extends JPanel implements Observer {
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
 
-    private Timer pathTimer; // 경로 이동 타이머
+    public Timer pathTimer; // 경로 이동 타이머
     private int currentIndex = 0;
 
 
-    private Timer timer;
+    public Timer timer;
     private AStarAlgorithm algorithm;
 
     private KeyAdapter userMovement;
@@ -88,14 +88,16 @@ public class GridPanel extends JPanel implements Observer {
                     check = true;
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
+                    showEndGameDialog(false);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    easyMap();
                 }
             }
         });
     }
 
     public void createWall(int x, int y) {
-
-
         Tile t = grid.find(x, y);
 
         if (t != null) {
@@ -140,6 +142,7 @@ public class GridPanel extends JPanel implements Observer {
                     repaint();
                 } else {
                     pathTimer.stop();
+                    timer.stop();
                 }
             }
         });
@@ -196,7 +199,6 @@ public class GridPanel extends JPanel implements Observer {
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
                     if (user != null) {
                         if (x == TILE_SIZE - 1) {
-                            showEndGameDialog(false);
                             lifeDown();
                             return;
                         }
@@ -229,6 +231,9 @@ public class GridPanel extends JPanel implements Observer {
                     check = false;
                     controls.resetGameSetting();
                     showEndGameDialog(false);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    easyMap();
                 }
             }
         };
@@ -265,7 +270,7 @@ public class GridPanel extends JPanel implements Observer {
 
             Image image = null;
             try {
-                image = ImageIO.read(new File("../monster.png"));
+                image = ImageIO.read(new File("monster.png"));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -351,11 +356,37 @@ public class GridPanel extends JPanel implements Observer {
     }
 
     public void startMap(Grid grid) {
+        algorithm.reset();
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
         this.grid = grid;
+        easyMap();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
+    }
+
+    public void easyMap() {
+        algorithm.reset();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
         createWall(2, 2); // 원하는 위치에 벽 생성
         createWall(3, 2);
         createWall(4, 2);
+        createWall(4, 4);
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
+    }
+
+    public void normalMap() {
+        algorithm.reset();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
+        createWall(2, 2); // 원하는 위치에 벽 생성
+        createWall(3, 2);
+        createWall(4, 2);
+        createWall(4, 4);
+        createWall(5, 5);
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
+    }
+
+    public void hardMap() {
+        algorithm.reset();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
         createWall(4, 4);
         ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
     }

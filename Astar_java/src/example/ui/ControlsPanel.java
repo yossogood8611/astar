@@ -21,7 +21,7 @@ public class ControlsPanel extends JPanel {
     private JComboBox<String> selector;
     private GridPanel canvas;
 
-    private Timer timer;
+    public Timer timer;
     JLabel timerLabel;
     JLabel lifeLabel;
 
@@ -29,10 +29,11 @@ public class ControlsPanel extends JPanel {
 
     public void resetGameSetting(){
         timer.stop();
+        canvas.timer.stop();
+        canvas.pathTimer.stop();
         timerLabel.setText(TIME_60);
         lifeCount = 3;
         lifeLabel.setText("Life: " + lifeCount);
-
         algorithm.reset();
         algorithm.updateUI();
     }
@@ -134,14 +135,17 @@ public class ControlsPanel extends JPanel {
                 remainingTime--;
                 timerLabel.setText("Time: " + remainingTime);
                 if (remainingTime == 0) {
-                    algorithm.reset();
-                    algorithm.updateUI();
+                    timer.stop();
+                    canvas.timer.stop();
+                    canvas.pathTimer.stop();
                     canvas.showEndGameDialog(true);
                     selectionType = SelectionType.START;
-                    timer.stop();
                     timerLabel.setText(TIME_60);
                     lifeCount = 3;
                     lifeLabel.setText("life: " + lifeCount);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    canvas.easyMap();
                 }
             }
         });
@@ -174,12 +178,15 @@ public class ControlsPanel extends JPanel {
     public void selectLevel() {
         switch (levelType) {
             case EASY:
+                canvas.easyMap();
                 timerLabel.setText(TIME_20);
                 break;
             case NORMAL:
+                canvas.normalMap();
                 timerLabel.setText(TIME_40);
                 break;
             case HARD:
+                canvas.hardMap();
                 timerLabel.setText(TIME_60);
                 break;
         }
