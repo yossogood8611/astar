@@ -143,6 +143,8 @@ public class ControlsPanel extends JPanel {
                     timer.stop();
                     canvas.timer.stop();
                     canvas.pathTimer.stop();
+                    canvas.RemoveKeyListener();
+                    System.out.println("게임이 끝났습니다러");
                     canvas.showEndGameDialog(true);
                     selectionType = SelectionType.START;
                     timerLabel.setText(TIME_60);
@@ -224,6 +226,4 @@ public class ControlsPanel extends JPanel {
     public enum LevelType {
         EASY, NORMAL, HARD, CUSTOM
     }
-
-
 }
