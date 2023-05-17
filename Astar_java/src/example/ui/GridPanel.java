@@ -18,6 +18,7 @@ import example.element.Grid;
 import example.element.Tile;
 
 import static example.element.Tile.TILE_SIZE;
+import static example.ui.ControlsPanel.levelType;
 import static example.ui.ControlsPanel.lifeLabel;
 
 public class GridPanel extends JPanel implements Observer {
@@ -48,7 +49,7 @@ public class GridPanel extends JPanel implements Observer {
     public KeyAdapter userMovement;
     public Timer itemTimer;
     public Tile item;
-    public static String[] header = {"난이도", "남은 시간", "남은 생명"};
+    public static String[] header = {"난이도", "생존 시간", "남은 생명","점수"};
     public static String[][] contents = new String[50][4]; //{{"Hard", "60", "3", "321223(점수)"}};
     public static int contentSize = 0;
 
@@ -158,19 +159,27 @@ public class GridPanel extends JPanel implements Observer {
 
     private void setRank() {
         contents[contentSize][0] = ControlsPanel.levelType.name();
-        contents[contentSize][1] = String.valueOf(ControlsPanel.endTime);
+        int temp=0;
+        switch (levelType.name()){
+            case "EASY":temp=20;break;
+            case "NORMAL":temp=40;break;
+            case "HARD":temp=60;break;
+            case "CUSTOM":return;
+        }
+        int time = temp - ControlsPanel.endTime;
+        contents[contentSize][1] = String.valueOf(time);
         contents[contentSize][2] = String.valueOf(ControlsPanel.endLife);
         int score = 0;
         if (contents[contentSize][0] == ControlsPanel.LevelType.HARD.name())
-            score += 60;
+            score += 100;
         else if (contents[contentSize][0] == ControlsPanel.LevelType.NORMAL.name())
             score += 80;
         else if (contents[contentSize][0] == ControlsPanel.LevelType.EASY.name())
-            score += 90;
+            score += 60;
         else
             score += 100;
-
-        contents[contentSize][3] = String.valueOf(score - Integer.parseInt(contents[contentSize][1].replace("Time: ", "")) - Integer.parseInt(contents[contentSize][2].replace("Life: ", "")));
+        score+=time;
+        contents[contentSize][3] = String.valueOf(score + Integer.parseInt(contents[contentSize][2].replace("Life: ", ""))*10);
 
         controls.putRank();
         contentSize++;
@@ -294,7 +303,6 @@ public class GridPanel extends JPanel implements Observer {
                     return;
                 } else {
                     if (x == item.getX() && y == item.getY()) {
-                        setBackground(new Color(238, 238, 238));
                         item.setCheck(true);
                     }
                 }
@@ -431,11 +439,14 @@ public class GridPanel extends JPanel implements Observer {
             }
             if (!item.isCheck()) {
                 g.setColor(Color.ORANGE);
+                AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+                g.setComposite(alphaComposite);
                 g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
             } else {
                 g.setColor(new Color(238, 238, 238));
+                AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.01f);
+                g.setComposite(alphaComposite);
                 g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
-
             }
         }
 

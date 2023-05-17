@@ -211,7 +211,7 @@ public class ControlsPanel extends JPanel {
         rankList = new JTable(GridPanel.contents, GridPanel.header);
         rankList.disable();
         JScrollPane scrollPane = new JScrollPane(rankList);
-        scrollPane.setBounds(10, 320, 180, 270);
+        scrollPane.setBounds(10, 320, 280, 270);
         add(scrollPane);
 
         return scrollPane;

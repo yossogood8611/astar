@@ -41,7 +41,7 @@ public class Main {
 
         int w = COLUMN_COUNT * Tile.TILE_SIZE;
         int h = ROW_COUNT * Tile.TILE_SIZE;
-        int controlsW = 200;
+        int controlsW = 300;
         int margin = 10;
 
         frame = new MainFrame();
