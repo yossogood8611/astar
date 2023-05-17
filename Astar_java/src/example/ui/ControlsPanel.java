@@ -10,8 +10,12 @@ import java.awt.event.ActionEvent;
 
 public class ControlsPanel extends JPanel {
 
+    public static final String TIME_60 = "Time: 60";
+    public static final String TIME_40 = "Time: 40";
+    public static final String TIME_20 = "Time: 20";
     private AStarAlgorithm algorithm;
     private SelectionType selectionType;
+    private LevelType levelType;
 
     private JComboBox<String> selector;
     private GridPanel canvas;
@@ -24,7 +28,7 @@ public class ControlsPanel extends JPanel {
 
     public void resetGameSetting(){
         timer.stop();
-        timerLabel.setText("Time: 60");
+        timerLabel.setText(TIME_60);
         lifeCount = 3;
         lifeLabel.setText("Life: " + lifeCount);
     }
@@ -58,6 +62,7 @@ public class ControlsPanel extends JPanel {
 
         this.algorithm = algorithm;
         this.selectionType = SelectionType.START;
+        this.levelType = LevelType.EASY;
 
         setBorder(new LineBorder(Color.gray));
         setLayout(null);
@@ -82,7 +87,8 @@ public class ControlsPanel extends JPanel {
         levelSelector.addItem("Hard");
         levelSelector.setBounds(10, height - 50, width - 20, 30);
         levelSelector.addActionListener((ActionEvent e) -> {
-            String selectedLevel = (String) levelSelector.getSelectedItem();
+             levelType =levelType.values()[levelSelector.getSelectedIndex()];
+            selectLevel();
            });
         add(levelSelector);
 
@@ -93,8 +99,9 @@ public class ControlsPanel extends JPanel {
             algorithm.reset();
             algorithm.updateUI();
             selectionType = SelectionType.START;
+            canvas.setCheck(true);
             timer.stop();
-            timerLabel.setText("Time: 60");
+            timerLabel.setText(TIME_60);
             lifeCount = 3;
             lifeLabel.setText("life: " + lifeCount);
         });
@@ -104,7 +111,7 @@ public class ControlsPanel extends JPanel {
         start.setBounds(110, height - 15, 80, 30);
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
-            canvas.startUserMovement();
+            canvas.startUserMovement(levelType);
             canvas.setCheck(false);
             canvas.disableMouseEvents();
             timer.start();
@@ -112,7 +119,7 @@ public class ControlsPanel extends JPanel {
         add(start);
 
         // Inside the ControlsPanel constructor
-        timerLabel = new JLabel("Time: 10"); // Initial time can be set to 60 seconds
+        timerLabel = new JLabel(TIME_20); // Initial time can be set to 60 seconds
         timerLabel.setBounds(20, height+20 , 80, 30);
         add(timerLabel);
 
@@ -126,7 +133,7 @@ public class ControlsPanel extends JPanel {
                 algorithm.updateUI();
                 selectionType = SelectionType.START;
                 timer.stop();
-                timerLabel.setText("Time: 60");
+                timerLabel.setText(TIME_60);
                 lifeCount = 3;
                 lifeLabel.setText("life: " + lifeCount);
             }
@@ -158,6 +165,22 @@ public class ControlsPanel extends JPanel {
         algorithm.updateUI();
     }
 
+    public void selectLevel() {
+        switch (levelType) {
+            case EASY:
+                timerLabel.setText(TIME_20);
+                break;
+            case NORMAL:
+                timerLabel.setText(TIME_40);
+                break;
+            case HARD:
+                timerLabel.setText(TIME_60);
+                break;
+        }
+
+        algorithm.updateUI();
+    }
+
     public void selectTiles(Tile t) {
         algorithm.setStart(t);
         algorithm.updateUI();
@@ -170,5 +193,10 @@ public class ControlsPanel extends JPanel {
     private enum SelectionType {
         START, END, REVERSE
     }
+
+    public enum LevelType {
+        EASY, NORMAL, HARD
+    }
+
 
 }
