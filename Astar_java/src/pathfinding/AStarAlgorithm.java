@@ -104,6 +104,9 @@ public class AStarAlgorithm extends Observable {
         while (temp.getParent() != null) {
             this.path.add(temp.getParent());
             temp = temp.getParent();
+            if(temp.equals(start)){
+                break;
+            }
         }
 
         this.path.add(start);
