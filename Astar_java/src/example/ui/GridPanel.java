@@ -115,13 +115,16 @@ public class GridPanel extends JPanel implements Observer {
 
     public void showEndGameDialog(boolean isGameWon) {
         String message;
+        String title;
         if (isGameWon) {
             message = "Congratulations! You won the game.";
+            title="You Win";
         } else {
             message = "Game Over. You lost the game.";
+            title="Game Over";
         }
 
-        JOptionPane.showMessageDialog(this, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void startUserMovement(ControlsPanel.LevelType levelType) {
