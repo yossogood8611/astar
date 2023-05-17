@@ -2,9 +2,13 @@ package example.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
@@ -233,21 +237,32 @@ public class GridPanel extends JPanel implements Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (user != null) {
-            int x = (user.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
-            int y = (user.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
+            int x = (user.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
+            int y = (user.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
 
             g.setColor(new Color(20, 122, 17));
             g.setStroke(widerStroke);
-            g.fillOval(x, y, 12, 12);
+            g.fillOval(x, y, 20, 20);
         }
 
         if (monster != null) {
-            int x = (monster.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
-            int y = (monster.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 6;
+            int x = (monster.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+            int y = (monster.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
 
-            g.setColor(new Color(16, 49, 119));
+            Image image = null;
+            try {
+                image = ImageIO.read(new File("monster.png"));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = myImage.createGraphics();
+            g2d.drawImage(image, 0, 0, 30, 30, null);
+            g2d.dispose();
+            g.drawImage(myImage, x, y, 150, 150, null);
             g.setStroke(widerStroke);
-            g.fillOval(x, y, 12, 12);
         }
 
         g.setStroke(defaultStroke);
@@ -258,10 +273,10 @@ public class GridPanel extends JPanel implements Observer {
                 g.drawRect(t.getX() * TILE_SIZE, t.getY() * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 if (!t.isValid()) {
                     g.setColor(Color.GRAY);
-                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 5;
-                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 5;
+                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
+                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
 
-                    g.fillOval(x, y, 10, 10);
+                    g.fillRoundRect(x, y, 20, 20, 10, 10);
                 }
             }
         }
