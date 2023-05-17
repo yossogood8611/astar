@@ -23,7 +23,7 @@ import static example.ui.ControlsPanel.lifeLabel;
 public class GridPanel extends JPanel implements Observer {
 
     private boolean check = true;
-
+    private Image backImage;
     private Grid grid;
 
     private ArrayList<Tile> path;
@@ -349,6 +349,10 @@ public class GridPanel extends JPanel implements Observer {
     protected void paintComponent(Graphics g1) {
         super.paintComponent(g1);
 
+        ImageIcon background = new ImageIcon("grass.jpg");
+        backImage = background.getImage();
+        g1.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
+
         Graphics2D g = (Graphics2D) g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -401,11 +405,22 @@ public class GridPanel extends JPanel implements Observer {
                 g.setColor(new Color(220, 220, 220));
                 g.drawRect(t.getX() * TILE_SIZE, t.getY() * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 if (!t.isValid()) {
-                    g.setColor(Color.GRAY);
-                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
-                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
+                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
 
-                    g.fillRoundRect(x, y, 20, 20, 10, 10);
+                    Image blockImage = null;
+                    try {
+                        blockImage = ImageIO.read(new File("block.png"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = myImage.createGraphics();
+                    g2d.drawImage(blockImage, 0, 0, 30, 30, null);
+                    g2d.dispose();
+                    g.drawImage(myImage, x, y, 150, 150, null);
+                    g.setStroke(widerStroke);
                 }
             }
         }
