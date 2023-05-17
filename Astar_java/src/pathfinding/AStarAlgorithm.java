@@ -89,15 +89,12 @@ public class AStarAlgorithm extends Observable {
             n.setValid(true);
         }
     }
-    public void reset(Node start,Node end,Network network) {
+    public void reset(Node start,Node end) {
         this.start = start;
         this.end = end;
         this.path = null;
         this.openList = null;
         this.closedList = null;
-        for (Node n : network.getNodes()) {
-            n.setValid(true);
-        }
     }
 
     private void retracePath(Node current) {
