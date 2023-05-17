@@ -175,7 +175,8 @@ public class ControlsPanel extends JPanel {
                 remainingTime--;
                 timerLabel.setText("Time: " + remainingTime);
                 if (remainingTime == 0) {
-                    canvas.showEndGameDialog(true);
+                    algorithm.reset();
+                    algorithm.updateUI();
                     timer.stop();
                     canvas.timer.stop();
                     canvas.pathTimer.stop();
@@ -185,10 +186,9 @@ public class ControlsPanel extends JPanel {
                     selectionType = SelectionType.START;
                     lifeCount = 3;
                     lifeLabel.setText("Life: " + lifeCount);
-                    algorithm.reset();
-                    algorithm.updateUI();
                     canvas.easyMap();
                     timerLabel.setText(TIME_60);
+                    canvas.showEndGameDialog(true);
                 }
             }
         });

@@ -89,7 +89,6 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
-                    showEndGameDialog(false);
                     timer.stop();
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
@@ -98,6 +97,7 @@ public class GridPanel extends JPanel implements Observer {
                     controls.resetGameSetting();
                     algorithm.reset();
                     algorithm.updateUI();
+                    showEndGameDialog(false);
                     easyMap();
                 }
             }
@@ -184,7 +184,6 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
-                    showEndGameDialog(false);
                     timer.stop();
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
@@ -193,6 +192,7 @@ public class GridPanel extends JPanel implements Observer {
                     controls.resetGameSetting();
                     algorithm.reset();
                     algorithm.updateUI();
+                    showEndGameDialog(false);
                     easyMap();
                 }
             }
@@ -227,12 +227,10 @@ public class GridPanel extends JPanel implements Observer {
                             lifeDown();
                             return;
                         }
-
                         if (!grid.find(x, y + 1).isValid()) {
                             lifeDown();
                             return;
                         }
-
                         user = new Tile(x, y + 1);
                         repaint();
                     }
@@ -259,8 +257,6 @@ public class GridPanel extends JPanel implements Observer {
                             lifeDown();
                             return;
                         }
-
-
                         user = new Tile(x + 1, y);
                         repaint();
                     }
@@ -269,7 +265,6 @@ public class GridPanel extends JPanel implements Observer {
                 algorithm.reset(user, monster);
                 algorithm.solve();
             }
-
             private void lifeDown() {
                 System.out.println("범위 벗어남");
                 controls.lifeDown();
@@ -278,7 +273,6 @@ public class GridPanel extends JPanel implements Observer {
 
             private void gameOver() {
                 if (controls.isLifeZero()) {
-                    showEndGameDialog(false);
                     pathTimer.stop();
                     timer.stop();
 
@@ -292,6 +286,7 @@ public class GridPanel extends JPanel implements Observer {
                     controls.resetGameSetting();
                     algorithm.reset();
                     algorithm.updateUI();
+                    showEndGameDialog(false);
                     easyMap();
                 }
             }
