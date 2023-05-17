@@ -147,11 +147,13 @@ public class GridPanel extends JPanel implements Observer {
         } else {
             message = "Game Over. You lose the game.";
             title = "Game Over";
+            setBackground(Color.black);
         }
 
         setRank();
 
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
+        setBackground(new Color(238,238,238));
     }
 
     private void setRank() {
