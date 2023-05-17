@@ -15,7 +15,7 @@ public class ControlsPanel extends JPanel {
     public static final String TIME_40 = "Time: 40";
     public static final String TIME_20 = "Time: 2";
     private AStarAlgorithm algorithm;
-    private SelectionType selectionType;
+    public static SelectionType selectionType;
     private LevelType levelType;
 
     private JComboBox<String> selector;
@@ -135,8 +135,6 @@ public class ControlsPanel extends JPanel {
                 remainingTime--;
                 timerLabel.setText("Time: " + remainingTime);
                 if (remainingTime == 0) {
-                    algorithm.reset();
-                    algorithm.updateUI();
                     timer.stop();
                     canvas.timer.stop();
                     canvas.pathTimer.stop();
@@ -147,6 +145,9 @@ public class ControlsPanel extends JPanel {
                     timerLabel.setText(TIME_60);
                     lifeCount = 3;
                     lifeLabel.setText("life: " + lifeCount);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    canvas.easyMap();
                 }
             }
         });
@@ -179,12 +180,15 @@ public class ControlsPanel extends JPanel {
     public void selectLevel() {
         switch (levelType) {
             case EASY:
+                canvas.easyMap();
                 timerLabel.setText(TIME_20);
                 break;
             case NORMAL:
+                canvas.normalMap();
                 timerLabel.setText(TIME_40);
                 break;
             case HARD:
+                canvas.hardMap();
                 timerLabel.setText(TIME_60);
                 break;
         }
@@ -201,7 +205,7 @@ public class ControlsPanel extends JPanel {
         this.canvas = canvas;
     }
 
-    private enum SelectionType {
+    enum SelectionType {
         START, END, REVERSE
     }
 

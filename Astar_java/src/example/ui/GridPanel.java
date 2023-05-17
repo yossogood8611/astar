@@ -22,7 +22,7 @@ import static example.element.Tile.TILE_SIZE;
 
 public class GridPanel extends JPanel implements Observer {
 
-    private boolean check=true;
+    private boolean check = true;
 
     private Grid grid;
 
@@ -35,6 +35,7 @@ public class GridPanel extends JPanel implements Observer {
     private BasicStroke defaultStroke;
 
     private BasicStroke widerStroke;
+    private CreateMap createMap;
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
 
@@ -45,10 +46,15 @@ public class GridPanel extends JPanel implements Observer {
     public Timer timer;
     private AStarAlgorithm algorithm;
 
+<<<<<<< HEAD
     public KeyAdapter userMovement;
     public void RemoveKeyListener(){
         removeKeyListener(userMovement);
     }
+=======
+    private KeyAdapter userMovement;
+
+>>>>>>> 72f4f49b38d17bc3709f5338e75d63be30460c89
     public GridPanel(ControlsPanel controls, AStarAlgorithm algorithm) {
         this.controls = controls;
 
@@ -61,7 +67,7 @@ public class GridPanel extends JPanel implements Observer {
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                if(!check){
+                if (!check) {
                     return;
                 }
                 int x = evt.getX();
@@ -70,11 +76,7 @@ public class GridPanel extends JPanel implements Observer {
                 int tileX = x / TILE_SIZE;
                 int tileY = y / TILE_SIZE;
 
-                Tile t = grid.find(tileX, tileY);
-
-                if (t != null) {
-                    controls.selectTile(t);
-                }
+                createWall(tileX, tileY);
             }
         });
 
@@ -90,15 +92,24 @@ public class GridPanel extends JPanel implements Observer {
                     timer.stop();
                     RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
-                    check=true;
-                    algorithm.reset();
-                    algorithm.updateUI();
+                    check = true;
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
                     showEndGameDialog(false);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    easyMap();
                 }
             }
         });
+    }
+
+    public void createWall(int x, int y) {
+        Tile t = grid.find(x, y);
+
+        if (t != null) {
+            controls.selectTile(t);
+        }
     }
 
     public void showEndGameDialog(boolean isGameWon) {
@@ -117,11 +128,17 @@ public class GridPanel extends JPanel implements Observer {
         addKeyListener(userMovement);
         setFocusable(true);
         requestFocusInWindow(); // 포커스를 요청하여 키보드 입력을 받을 수 있도록 합니다.
-        int speed=500;
-        switch (levelType){
-            case EASY:speed=500; break;
-            case NORMAL:speed=250; break;
-            case HARD:speed=100; break;
+        int speed = 500;
+        switch (levelType) {
+            case EASY:
+                speed = 500;
+                break;
+            case NORMAL:
+                speed = 250;
+                break;
+            case HARD:
+                speed = 100;
+                break;
         }
         pathTimer = new Timer(speed, new ActionListener() {
             @Override
@@ -212,17 +229,24 @@ public class GridPanel extends JPanel implements Observer {
             }
 
             private void gameOver() {
-                if(controls.isLifeZero()){
+                if (controls.isLifeZero()) {
                     pathTimer.stop();
                     timer.stop();
+<<<<<<< HEAD
                     RemoveKeyListener();
                     algorithm.reset();
                     algorithm.updateUI();
+=======
+                    removeKeyListener(userMovement);
+>>>>>>> 72f4f49b38d17bc3709f5338e75d63be30460c89
                     System.out.println("게임이 끝났습니다.");
                     setRequestFocusEnabled(false);
-                    check=false;
+                    check = false;
                     controls.resetGameSetting();
                     showEndGameDialog(false);
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    easyMap();
                 }
             }
         };
@@ -339,5 +363,45 @@ public class GridPanel extends JPanel implements Observer {
 
     public void setCheck(boolean check) {
         this.check = check;
+    }
+
+    public void setCreateMap(CreateMap createMap) {
+        this.createMap = createMap;
+    }
+
+    public void startMap(Grid grid) {
+        algorithm.reset();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
+        this.grid = grid;
+        easyMap();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
+    }
+
+    public void easyMap() {
+        algorithm.reset();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
+        createWall(2, 2); // 원하는 위치에 벽 생성
+        createWall(3, 2);
+        createWall(4, 2);
+        createWall(4, 4);
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
+    }
+
+    public void normalMap() {
+        algorithm.reset();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
+        createWall(2, 2); // 원하는 위치에 벽 생성
+        createWall(3, 2);
+        createWall(4, 2);
+        createWall(4, 4);
+        createWall(5, 5);
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
+    }
+
+    public void hardMap() {
+        algorithm.reset();
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
+        createWall(4, 4);
+        ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
     }
 }
