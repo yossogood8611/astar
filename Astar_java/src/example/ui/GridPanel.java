@@ -86,7 +86,6 @@ public class GridPanel extends JPanel implements Observer {
                     check=true;
                     setRequestFocusEnabled(false);
                     controls.resetGameSetting();
-                    showEndGameDialog(false);
                 }
             }
         });
@@ -204,6 +203,7 @@ public class GridPanel extends JPanel implements Observer {
 
             private void gameOver() {
                 if(controls.isLifeZero()){
+                    pathTimer.stop();
                     timer.stop();
                     removeKeyListener(userMovement);
                     System.out.println("게임이 끝났습니다.");

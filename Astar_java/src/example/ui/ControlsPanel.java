@@ -7,12 +7,13 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ControlsPanel extends JPanel {
 
     public static final String TIME_60 = "Time: 60";
     public static final String TIME_40 = "Time: 40";
-    public static final String TIME_20 = "Time: 20";
+    public static final String TIME_20 = "Time: 2";
     private AStarAlgorithm algorithm;
     private SelectionType selectionType;
     private LevelType levelType;
@@ -31,6 +32,9 @@ public class ControlsPanel extends JPanel {
         timerLabel.setText(TIME_60);
         lifeCount = 3;
         lifeLabel.setText("Life: " + lifeCount);
+
+        algorithm.reset();
+        algorithm.updateUI();
     }
 
     public void lifeDown(){
@@ -123,22 +127,24 @@ public class ControlsPanel extends JPanel {
         timerLabel.setBounds(20, height+20 , 80, 30);
         add(timerLabel);
 
-        timer = new Timer(1000, (ActionEvent e) -> {
-            int remainingTime = Integer.parseInt(timerLabel.getText().replace("Time: ", ""));
-            remainingTime--;
-            timerLabel.setText("Time: " + remainingTime);
-            if (remainingTime == 0) {
-                canvas.showEndGameDialog(true);
-                algorithm.reset();
-                algorithm.updateUI();
-                selectionType = SelectionType.START;
-                timer.stop();
-                timerLabel.setText(TIME_60);
-                lifeCount = 3;
-                lifeLabel.setText("life: " + lifeCount);
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int remainingTime = Integer.parseInt(timerLabel.getText().replace("Time: ", ""));
+                remainingTime--;
+                timerLabel.setText("Time: " + remainingTime);
+                if (remainingTime == 0) {
+                    algorithm.reset();
+                    algorithm.updateUI();
+                    canvas.showEndGameDialog(true);
+                    selectionType = SelectionType.START;
+                    timer.stop();
+                    timerLabel.setText(TIME_60);
+                    lifeCount = 3;
+                    lifeLabel.setText("life: " + lifeCount);
+                }
             }
         });
-
         // Inside the ControlsPanel constructor
         lifeLabel = new JLabel("Life: " + lifeCount); // Initial life count can be set to 3
         lifeLabel.setBounds(120, height+20 , 80, 30);
