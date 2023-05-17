@@ -140,6 +140,7 @@ public class ControlsPanel extends JPanel {
         reset.addActionListener((ActionEvent ae) -> {
             algorithm.reset();
             algorithm.updateUI();
+            canvas.item = null;
             selectionType = SelectionType.START;
             canvas.setCheck(true);
             timer.stop();
@@ -152,6 +153,7 @@ public class ControlsPanel extends JPanel {
         JButton start = new JButton("Start");
         start.setBounds(105, height + 100, 85, 30);
         start.addActionListener((ActionEvent ae) -> {
+            canvas.item = new Tile(0,0);
             remainingTime = Integer.parseInt(setTimeText.getText().replace("Time: ", ""));
             lifeCount = Integer.parseInt(setLifeText.getText());
             algorithm.solve();
@@ -159,6 +161,7 @@ public class ControlsPanel extends JPanel {
             canvas.setCheck(false);
             canvas.disableMouseEvents();
             timer.start();
+            canvas.itemTimer.start();
         });
         add(start);
 
@@ -179,6 +182,7 @@ public class ControlsPanel extends JPanel {
                     algorithm.updateUI();
                     timer.stop();
                     canvas.timer.stop();
+                    canvas.item = null;
                     canvas.pathTimer.stop();
                     canvas.RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
