@@ -52,6 +52,7 @@ public class Main {
 
         container = new JPanel();
         container.setLayout(null);
+        container.setBackground(Color.WHITE);
 
         controls = new ControlsPanel(controlsW, 120, astar);
         controls.setBounds(w + (margin * 2), margin, controlsW, h);

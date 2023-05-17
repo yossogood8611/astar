@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -379,29 +380,76 @@ public class GridPanel extends JPanel implements Observer {
     public void easyMap() {
         algorithm.reset();
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
-        createWall(2, 2); // 원하는 위치에 벽 생성
-        createWall(3, 2);
-        createWall(4, 2);
-        createWall(4, 4);
+        ArrayList<Integer> xs = new ArrayList<>();
+        ArrayList<Integer> ys = new ArrayList<>();
+
+        int count = 40;
+
+        getWalls(xs, ys, count);
+
+        for (int i = 0; i < count; i++) {
+            try {
+                createWall(xs.get(i), ys.get(i));
+            } catch (Exception e) {
+
+            }
+        }
         ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
     }
 
     public void normalMap() {
         algorithm.reset();
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
-        createWall(2, 2); // 원하는 위치에 벽 생성
-        createWall(3, 2);
-        createWall(4, 2);
-        createWall(4, 4);
-        createWall(5, 5);
+        ArrayList<Integer> xs = new ArrayList<>();
+        ArrayList<Integer> ys = new ArrayList<>();
+
+        int count = 60;
+
+        getWalls(xs, ys, count);
+
+        for (int i = 0; i < count; i++) {
+            try {
+                createWall(xs.get(i), ys.get(i));
+            } catch (Exception e) {
+
+            }
+        }
         ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
     }
 
     public void hardMap() {
         algorithm.reset();
         ControlsPanel.selectionType = ControlsPanel.SelectionType.REVERSE;
-        createWall(4, 4);
+        ArrayList<Integer> xs = new ArrayList<>();
+        ArrayList<Integer> ys = new ArrayList<>();
+
+        int count = 80;
+
+        getWalls(xs, ys, count);
+
+        for (int i = 0; i < count; i++) {
+            try {
+                createWall(xs.get(i), ys.get(i));
+            } catch (Exception e) {
+
+            }
+        }
         ControlsPanel.selectionType = ControlsPanel.SelectionType.START;
+    }
+
+    private static void getWalls(ArrayList<Integer> xs, ArrayList<Integer> ys, int count) {
+        for (int j = 0; j < count; j++) {
+            int x = new Random().nextInt(20);
+            int y = new Random().nextInt(20);
+
+            if (!(xs.contains(x) && ys.contains(y))) {
+                xs.add(new Random().nextInt(20));
+                ys.add(new Random().nextInt(20));
+            } else {
+                xs.add(x);
+                ys.add(y);
+            }
+        }
     }
 
     public void customMap() {
