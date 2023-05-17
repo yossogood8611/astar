@@ -237,6 +237,7 @@ public class ControlsPanel extends JPanel {
                 canvas.easyMap();
                 setTimeText.setText(TIME_20.replace("Time: ", ""));
                 setLifeText.setText(String.valueOf(lifeCount));
+                setSpeedText.setText("500");
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
@@ -246,6 +247,7 @@ public class ControlsPanel extends JPanel {
                 canvas.normalMap();
                 setTimeText.setText(TIME_40.replace("Time: ", ""));
                 setLifeText.setText(String.valueOf(lifeCount));
+                setSpeedText.setText("250");
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
@@ -255,6 +257,7 @@ public class ControlsPanel extends JPanel {
                 canvas.hardMap();
                 setTimeText.setText(TIME_60.replace("Time: ", ""));
                 setLifeText.setText(String.valueOf(lifeCount));
+                setSpeedText.setText("100");
                 setSpeedText.disable();
                 setLifeText.disable();
                 setTimeText.disable();
