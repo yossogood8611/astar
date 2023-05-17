@@ -40,6 +40,8 @@ public class GridPanel extends JPanel implements Observer {
 //    private int currentIndex; // 현재 경로 인덱스
 
     public Timer pathTimer; // 경로 이동 타이머
+    public Timer itemTimer; // item 생성 타이머
+    private Random random;
     private int currentIndex = 0;
 
 
@@ -95,6 +97,44 @@ public class GridPanel extends JPanel implements Observer {
                 }
             }
         });
+
+        itemTimer = new Timer(10000, new ActionListener()@Override
+            public void actionPerformed(ActionEvent e) {
+                generateNewItem();
+                repaint();
+        });
+    }
+
+    public void checkUserItemCollision(){
+        if (user != null && monster != null && user.equals(monster)) {
+            controls.decreaseMonsterSpeed(10);
+            removeItemTile(monster);
+        }
+    }
+
+    private void generateNewItem(){
+        ArrayList<Tile> emptyTiles = getEmptyTiles();
+        if (!emptyTiles.isEmpty()) {
+            int randomIndex = random.nextInt(emptyTiles.size());
+            Tile newItem = emptyTiles.get(randomIndex);
+            newItem.setItem(true);
+            repaint();
+        }
+    }
+
+    private void removeItemTile(Tile tile) {
+        tile.setItem(false);
+        repaint();
+    }
+
+    private ArrayList<Tile> getEmptyTiles() {
+        ArrayList<Tile> emptyTiles = new ArrayList<>();
+        for (Tile t : grid.getTiles()) {
+            if (t.isValid() && !t.hasItem()) {
+                emptyTiles.add(t);
+            }
+        }
+        return emptyTiles;
     }
 
     public void createWall(int x, int y) {
@@ -296,6 +336,12 @@ public class GridPanel extends JPanel implements Observer {
                     int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10;
 
                     g.fillRoundRect(x, y, 20, 20, 10, 10);
+                }
+                if (t.hasItem()) {
+                    g.setColor(Color.YELLOW);
+                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 5;
+                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 5;
+                    g.fillOval(x, y, 10, 10);
                 }
             }
         }
