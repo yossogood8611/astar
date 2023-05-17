@@ -25,6 +25,10 @@ public class ControlsPanel extends JPanel {
     JLabel timerLabel;
     JLabel lifeLabel;
     public static JTextField setSpeedText;
+    public static JTextField setTimeText;
+    public static JTextField setLifeText;
+
+    int remainingTime;
 
     LevelType levelState;
 
@@ -104,17 +108,34 @@ public class ControlsPanel extends JPanel {
         add(levelSelector);
 
         Label speedLabel = new Label("speed:");
-        speedLabel.setBounds(10, height - 10, width - 20, 30);
+        speedLabel.setBounds(10, height - 10, width - 20, 10);
         add(speedLabel);
-
         setSpeedText = new JTextField();
         setSpeedText.disable();
         setSpeedText.setText(String.valueOf(300));
-        setSpeedText.setBounds(10, height + 15, width - 20, 30);
+        setSpeedText.setBounds(10, height + 5, width - 20, 30);
         add(setSpeedText);
 
+        Label timeLabelText = new Label("time:");
+        timeLabelText.setBounds(10, height + 40, 30, 10);
+        add(timeLabelText);
+        setLifeText = new JTextField();
+        setLifeText.disable();
+        setLifeText.setText(String.valueOf(60));
+        setLifeText.setBounds(10, height + 55, 85, 30);
+        add(setLifeText);
+
+        Label lifeLabelText = new Label("life:");
+        lifeLabelText.setBounds(105, height + 40, 30, 10);
+        add(lifeLabelText);
+        setTimeText = new JTextField();
+        setTimeText.disable();
+        setTimeText.setText(String.valueOf(3));
+        setTimeText.setBounds(105, height + 55, 85, 30);
+        add(setTimeText);
+
         JButton reset = new JButton("Reset");
-        reset.setBounds(10, height + 50, 80, 30);
+        reset.setBounds(10, height + 100, 85, 30);
         reset.addActionListener((ActionEvent ae) -> {
             algorithm.reset();
             algorithm.updateUI();
@@ -128,7 +149,7 @@ public class ControlsPanel extends JPanel {
         add(reset);
 
         JButton start = new JButton("Start");
-        start.setBounds(110, height + 50, 80, 30);
+        start.setBounds(105, height + 100, 85, 30);
         start.addActionListener((ActionEvent ae) -> {
             algorithm.solve();
             canvas.startUserMovement(levelType);
@@ -140,13 +161,13 @@ public class ControlsPanel extends JPanel {
 
         // Inside the ControlsPanel constructor
         timerLabel = new JLabel(TIME_20); // Initial time can be set to 60 seconds
-        timerLabel.setBounds(20, height + 80, 80, 30);
+        timerLabel.setBounds(30, height + 130, 80, 30);
         add(timerLabel);
 
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int remainingTime = Integer.parseInt(timerLabel.getText().replace("Time: ", ""));
+                remainingTime = Integer.parseInt(timerLabel.getText().replace("Time: ", ""));
                 remainingTime--;
                 timerLabel.setText("Time: " + remainingTime);
                 if (remainingTime == 0) {
@@ -154,7 +175,7 @@ public class ControlsPanel extends JPanel {
                     canvas.timer.stop();
                     canvas.pathTimer.stop();
                     canvas.RemoveKeyListener();
-                    System.out.println("게임이 끝났습니다러");
+                    System.out.println("게임이 끝났습니다.");
                     canvas.showEndGameDialog(true);
                     selectionType = SelectionType.START;
                     timerLabel.setText(TIME_60);
@@ -168,7 +189,7 @@ public class ControlsPanel extends JPanel {
         });
         // Inside the ControlsPanel constructor
         lifeLabel = new JLabel("Life: " + lifeCount); // Initial life count can be set to 3
-        lifeLabel.setBounds(120, height + 80, 80, 30);
+        lifeLabel.setBounds(130, height + 130, 80, 30);
         add(lifeLabel);
     }
 
@@ -202,21 +223,29 @@ public class ControlsPanel extends JPanel {
             case EASY:
                 canvas.easyMap();
                 setSpeedText.disable();
+                setLifeText.disable();
+                setTimeText.disable();
                 timerLabel.setText(TIME_20);
                 break;
             case NORMAL:
                 canvas.normalMap();
                 setSpeedText.disable();
+                setLifeText.disable();
+                setTimeText.disable();
                 timerLabel.setText(TIME_40);
                 break;
             case HARD:
                 canvas.hardMap();
                 setSpeedText.disable();
+                setLifeText.disable();
+                setTimeText.disable();
                 timerLabel.setText(TIME_60);
                 break;
             case CUSTOM:
                 canvas.customMap();
                 setSpeedText.enable();
+                setLifeText.enable();
+                setTimeText.enable();
                 timerLabel.setText(TIME_60);
                 break;
         }
