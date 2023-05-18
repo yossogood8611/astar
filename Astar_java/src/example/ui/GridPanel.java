@@ -31,7 +31,7 @@ public class GridPanel extends JPanel implements Observer {
     private Tile user;
 
     private Tile monster;
-    private ControlsPanel controls;
+    public ControlsPanel controls;
 
     private BasicStroke defaultStroke;
 
