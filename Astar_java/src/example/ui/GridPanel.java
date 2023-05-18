@@ -392,9 +392,7 @@ public class GridPanel extends JPanel implements Observer {
             g.drawImage(myImage, x, y, 150, 150, null);
             g.setStroke(widerStroke);
         }
-
         g.setStroke(defaultStroke);
-
         if (grid != null && grid.getTiles() != null) {
             for (Tile t : grid.getTiles()) {
                 g.setColor(new Color(220, 220, 220));
@@ -413,6 +411,24 @@ public class GridPanel extends JPanel implements Observer {
                     BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2d = myImage.createGraphics();
                     g2d.drawImage(blockImage, 0, 0, 30, 30, null);
+
+                    g.drawImage(myImage, x, y, 150, 150, null);
+                    g.setStroke(widerStroke);
+                }
+                if (t.isHill()) {
+                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+
+                    Image grassImage = null;
+                    try {
+                        grassImage = ImageIO.read(new File("grass.png"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = myImage.createGraphics();
+                    g2d.drawImage(grassImage, 0, 0, 30, 30, null);
 
                     g.drawImage(myImage, x, y, 150, 150, null);
                     g.setStroke(widerStroke);
@@ -446,6 +462,8 @@ public class GridPanel extends JPanel implements Observer {
                 g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
             }
         }
+
+
 
         g.drawRect(getWidth() - 1, 0, 1, getHeight());
         g.drawRect(0, getHeight() - 1, getWidth(), 1);

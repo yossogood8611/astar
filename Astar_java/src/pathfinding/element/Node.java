@@ -8,6 +8,7 @@ public abstract class Node {
     private ArrayList<Node> neighbours;
     private double cost, heuristic, function;
     private boolean valid;
+    private boolean hill;
 
     public abstract void calculateNeighbours(Network network);
 
@@ -66,6 +67,14 @@ public abstract class Node {
 
     public void reverseValidation() {
         valid = !valid;
+    }
+
+    public boolean isHill() {
+        return hill;
+    }
+
+    public void reverseHill() {
+        hill = !hill;
     }
 
 }

@@ -23,7 +23,7 @@ public class AStarAlgorithm extends Observable {
 
     public boolean solve() {
 
-        if (start == null && end == null) {
+        if (start == null || end == null) {
             return false;
         }
 

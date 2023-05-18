@@ -112,6 +112,7 @@ public class ControlsPanel extends JPanel {
         selector = new JComboBox<>();
         selector.addItem("유저");
         selector.addItem("몬스터");
+        selector.addItem("언덕");
         selector.addItem("벽");
         selector.setBounds(10, 35, width - 20, 30);
         selector.setFont(dodum);
@@ -323,6 +324,8 @@ public class ControlsPanel extends JPanel {
 
     //주어진 타일을 선택해서 유저 몬스터 벽을 생성
     public void selectTile(Tile t) {
+        Tile start = (Tile) algorithm.getStart();
+        Tile end = (Tile) algorithm.getEnd();
         switch (selectionType) {
             case START:
                 if (t.isValid()) {
@@ -342,9 +345,16 @@ public class ControlsPanel extends JPanel {
                     canvas.showCanNotBuild("벽이 있어 생성 불가능 합니다.");
                 }
                 break;
+
+            case HILL:
+                if (((t.getX() == start.getX()) && (t.getY() == start.getY())) || ((t.getX() == end.getX()) && (t.getY() == end.getY()))) {
+                    canvas.showCanNotBuild("사용자 혹은 몬스터가 있어 생성 불가능 합니다.");
+                } else {
+                    t.reverseHill();
+                }
+                break;
             default:
-                Tile start = (Tile) algorithm.getStart();
-                Tile end = (Tile) algorithm.getEnd();
+
                 if (start == null || end == null) {
                     t.reverseValidation();
                 }
@@ -406,7 +416,7 @@ public class ControlsPanel extends JPanel {
     }
 
     enum SelectionType {
-        START, END, REVERSE
+        START, END, HILL,REVERSE
     }
 
     public enum LevelType {
