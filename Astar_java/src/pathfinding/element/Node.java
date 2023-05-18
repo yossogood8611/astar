@@ -1,19 +1,22 @@
 package pathfinding.element;
 
+import example.element.Grid;
+import example.element.Tile;
+
 import java.util.ArrayList;
 
 public abstract class Node {
 
-    private Node parent;
-    private ArrayList<Node> neighbours;
+    private Tile parent;
+    private ArrayList<Tile> neighbours;
     private double cost, heuristic, function;
     private boolean valid;
 
     public abstract void calculateNeighbours(Network network);
 
-    public abstract double distanceTo(Node dest);
+    public abstract double distanceTo(Tile dest);
 
-    public abstract double heuristic(Node dest);
+    public abstract double heuristic(Tile dest, Grid grid);
 
     public double getCost() {
         return cost;
@@ -40,19 +43,19 @@ public abstract class Node {
     }
 
 
-    public ArrayList<Node> getNeighbours() {
+    public ArrayList<Tile> getNeighbours() {
         return neighbours;
     }
 
-    public void setNeighbours(ArrayList<Node> neighbours) {
+    public void setNeighbours(ArrayList<Tile> neighbours) {
         this.neighbours = neighbours;
     }
 
-    public Node getParent() {
+    public Tile getParent() {
         return parent;
     }
 
-    public void setParent(Node parent) {
+    public void setParent(Tile parent) {
         this.parent = parent;
     }
 

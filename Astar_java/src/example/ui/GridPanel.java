@@ -398,6 +398,24 @@ public class GridPanel extends JPanel implements Observer {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
+        if (path != null) {
+            g.setColor(new Color(229, 142, 229));
+            for (int i = 0; i < path.size() - 1; i++) {
+                Tile t = path.get(i);
+                Tile t2 = path.get(i + 1);
+
+                int x = (t.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
+                int y = (t.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
+
+                int xx = (t2.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2);
+                int yy = (t2.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2);
+
+                g.setStroke(widerStroke);
+                g.fillOval(x, y, 10, 10);
+                g.setStroke(defaultStroke);
+                g.drawLine(x + 5, y + 5, xx, yy);
+            }
+        }
         if (user != null) {
             int x = (user.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
             int y = (user.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
@@ -520,12 +538,15 @@ public class GridPanel extends JPanel implements Observer {
     public void update(Observable o, Object o1) {
         AStarAlgorithm alg = (AStarAlgorithm) o;
         Grid grid = (Grid) alg.getNetwork();
-        ArrayList<Node> path = alg.getPath();
+        ArrayList<Tile> path = alg.getPath();
         Node start = alg.getStart();
         Node end = alg.getEnd();
 
+
         this.grid = grid;
         this.path = new ArrayList<>();
+
+
 
         if (path != null) {
             for (Node n : path) {

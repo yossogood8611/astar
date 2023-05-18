@@ -10,10 +10,7 @@ public class Tile extends Node {
 
     private int x, y, weight;
     public static int TILE_SIZE = 30;
-    private boolean check =false;
-
-    private Grid grid;
-
+    private boolean check = false;
 
     public void setCheck(boolean check) {
         this.check = check;
@@ -38,7 +35,9 @@ public class Tile extends Node {
         return y;
     }
 
-    public int getWeight(){return weight;}
+    public int getWeight() {
+        return weight;
+    }
 
     public void setX(int x) {
         this.x = x;
@@ -48,14 +47,16 @@ public class Tile extends Node {
         this.y = y;
     }
 
-    public void setWeight(int wight){this.weight = weight;}
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     @Override
     public void calculateNeighbours(Network network) {
 
         Grid grid = (Grid) network;
 
-        ArrayList<Node> nodes = new ArrayList<>();
+        ArrayList<Tile> nodes = new ArrayList<>();
 
         extracted(grid, nodes);
 
@@ -63,7 +64,8 @@ public class Tile extends Node {
 
     }
 
-    public void extracted(Grid grid, ArrayList<Node> nodes) {
+
+    public void extracted(Grid grid, ArrayList<Tile> nodes) {
         int minX = 0;
         int minY = 0;
         int maxX = grid.getWidth() - 1;
@@ -103,23 +105,23 @@ public class Tile extends Node {
     }
 
     @Override
-    public double heuristic(Node dest) {
-        if(grid.hasTileWithWeight()==true){
-            return distanceToWeight(dest);
-        }else{
+    public double heuristic(Tile dest, Grid grid) {
+        if (dest.getWeight() > 1) {
+            double v = distanceToWeight(dest);
+            return v;
+        } else {
             return distanceTo(dest);
         }
     }
 
     @Override
-    public double distanceTo(Node dest) {
-        Tile d = (Tile) dest;
-        return new Point(x, y).distance(new Point(d.x, d.y));
+    public double distanceTo(Tile dest) {
+        return new Point(x, y).distance(new Point(dest.x, dest.y));
     }
 
-    public double distanceToWeight(Node dest){
+    public double distanceToWeight(Node dest) {
         Tile d = (Tile) dest;
-        return new Point(x, y).distance(new Point(d.x, d.y))*d.weight;
+        return new Point(x, y).distance(new Point(d.x, d.y)) + d.weight;
     }
 
 }

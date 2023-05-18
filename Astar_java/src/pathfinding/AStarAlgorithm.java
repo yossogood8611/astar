@@ -1,21 +1,22 @@
 package pathfinding;
 
+import example.element.Grid;
+import example.element.Tile;
+import pathfinding.element.Network;
+
 import java.util.ArrayList;
 import java.util.Observable;
-
-import pathfinding.element.Network;
-import pathfinding.element.Node;
 
 public class AStarAlgorithm extends Observable {
 
     private Network network;
-    private ArrayList<Node> path;
+    private ArrayList<Tile> path;
 
-    private Node start;
-    private Node end;
+    private Tile start;
+    private Tile end;
 
-    private ArrayList<Node> openList;
-    private ArrayList<Node> closedList;
+    private ArrayList<Tile> openList;
+    private ArrayList<Tile> closedList;
 
     public AStarAlgorithm(Network network) {
         this.network = network;
@@ -40,7 +41,7 @@ public class AStarAlgorithm extends Observable {
         this.openList.add(start);
 
         while (!openList.isEmpty()) {
-            Node current = getLowestF();
+            Tile current = getLowestF();
 
             if (current.equals(end)) {
                 retracePath(current);
@@ -50,7 +51,7 @@ public class AStarAlgorithm extends Observable {
             openList.remove(current);
             closedList.add(current);
 
-            for (Node n : current.getNeighbours()) {
+            for (Tile n : current.getNeighbours()) {
 
                 if (closedList.contains(n) || !n.isValid()) {
                     continue;
@@ -69,7 +70,7 @@ public class AStarAlgorithm extends Observable {
                     n.setParent(current);
                 }
 
-                n.setHeuristic(n.heuristic(end));
+                n.setHeuristic(n.heuristic(n, (Grid) network));
                 n.setFunction(n.getCost() + n.getHeuristic());
 
             }
@@ -85,11 +86,12 @@ public class AStarAlgorithm extends Observable {
         this.path = null;
         this.openList = null;
         this.closedList = null;
-        for (Node n : network.getNodes()) {
+        for (Tile n : network.getNodes()) {
             n.setValid(true);
+            n.setWeight(1);
         }
     }
-    public void reset(Node start,Node end) {
+    public void reset(Tile start,Tile end) {
         this.start = start;
         this.end = end;
         this.path = null;
@@ -97,8 +99,8 @@ public class AStarAlgorithm extends Observable {
         this.closedList = null;
     }
 
-    private void retracePath(Node current) {
-        Node temp = current;
+    private void retracePath(Tile current) {
+        Tile temp = current;
         this.path.add(current);
 
         while (temp.getParent() != null) {
@@ -112,9 +114,9 @@ public class AStarAlgorithm extends Observable {
         this.path.add(start);
     }
 
-    private Node getLowestF() {
-        Node lowest = openList.get(0);
-        for (Node n : openList) {
+    private Tile getLowestF() {
+        Tile lowest = openList.get(0);
+        for (Tile n : openList) {
             if (n.getFunction() < lowest.getFunction()) {
                 lowest = n;
             }
@@ -132,23 +134,23 @@ public class AStarAlgorithm extends Observable {
         return network;
     }
 
-    public ArrayList<Node> getPath() {
+    public ArrayList<Tile> getPath() {
         return path;
     }
 
-    public Node getStart() {
+    public Tile getStart() {
         return start;
     }
 
-    public Node getEnd() {
+    public Tile getEnd() {
         return end;
     }
 
-    public void setStart(Node start) {
+    public void setStart(Tile start) {
         this.start = start;
     }
 
-    public void setEnd(Node end){
+    public void setEnd(Tile end){
             this.end = end;
     }
 
