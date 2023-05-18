@@ -226,7 +226,7 @@ public class ControlsPanel extends JPanel {
                     canvas.easyMap();
                     selectionType = SelectionType.START;
                     lifeCount = 3;
-                    lifeLabel.setText("Life: " + lifeCount);
+                    lifeLabel.setText("생명: " + lifeCount);
                     canvas.easyMap();
                     timerLabel.setText(TIME_60);
                     canvas.showEndGameDialog(true);
@@ -234,7 +234,7 @@ public class ControlsPanel extends JPanel {
             }
         });
 
-        lifeLabel = new JLabel("Life: " + lifeCount);
+        lifeLabel = new JLabel("생명: " + lifeCount);
         lifeLabel.setFont(dodum);
         lifeLabel.setBounds(30, height + 160, 80, 15);
         add(lifeLabel);
