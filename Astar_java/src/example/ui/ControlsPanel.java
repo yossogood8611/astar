@@ -6,9 +6,13 @@ import pathfinding.AStarAlgorithm;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+
+import static example.ui.GridPanel.contentSize;
 
 public class ControlsPanel extends JPanel {
 
@@ -135,25 +139,25 @@ public class ControlsPanel extends JPanel {
         add(setSpeedText);
 
         Label timeLabelText = new Label("time:");
-        timeLabelText.setBounds(10, height + 40, 30, 10);
+        timeLabelText.setBounds(10, height + 40, 50, 10);
         add(timeLabelText);
         setTimeText = new JTextField();
         setTimeText.disable();
         setTimeText.setText(TIME_20.replace("Time: ", ""));
-        setTimeText.setBounds(10, height + 55, 85, 30);
+        setTimeText.setBounds(10, height + 55, 138, 30);
         add(setTimeText);
 
         Label lifeLabelText = new Label("Life: ");
-        lifeLabelText.setBounds(105, height + 40, 30, 10);
+        lifeLabelText.setBounds(160, height + 40, 40, 10);
         add(lifeLabelText);
         setLifeText = new JTextField();
         setLifeText.disable();
         setLifeText.setText(String.valueOf(3));
-        setLifeText.setBounds(105, height + 55, 85, 30);
+        setLifeText.setBounds(150, height + 55, 138, 30);
         add(setLifeText);
 
         JButton reset = new JButton("Reset");
-        reset.setBounds(10, height + 100, 85, 30);
+        reset.setBounds(10, height + 100, 138, 30);
         reset.addActionListener((ActionEvent ae) -> {
             algorithm.reset();
             algorithm.updateUI();
@@ -167,8 +171,10 @@ public class ControlsPanel extends JPanel {
         });
         add(reset);
 
+
+
         JButton start = new JButton("Start");
-        start.setBounds(105, height + 100, 85, 30);
+        start.setBounds(150, height + 100, 138, 30);
         start.addActionListener((ActionEvent ae) -> {
             canvas.item = new Tile(0,0);
             remainingTime = Integer.parseInt(setTimeText.getText().replace("Time: ", ""));
@@ -182,11 +188,13 @@ public class ControlsPanel extends JPanel {
         });
         add(start);
 
+
+
         add(putRank());
 
         // Inside the ControlsPanel constructor
         timerLabel = new JLabel(TIME_20); // Initial time can be set to 60 seconds
-        timerLabel.setBounds(30, height + 130, 80, 30);
+        timerLabel.setBounds(30, height + 140, 80, 15);
         add(timerLabel);
 
         timer = new Timer(1000, new ActionListener() {
@@ -217,8 +225,71 @@ public class ControlsPanel extends JPanel {
         });
         // Inside the ControlsPanel constructor
         lifeLabel = new JLabel("Life: " + lifeCount); // Initial life count can be set to 3
-        lifeLabel.setBounds(130, height + 130, 80, 30);
+        lifeLabel.setBounds(30, height + 160, 80, 15);
         add(lifeLabel);
+
+        JButton save = new JButton("save");
+        save.setBounds(150, height + 150, 69, 30);
+        save.addActionListener((ActionEvent ae) -> {
+            try {
+                Writer w = new FileWriter("test.txt");
+                TableModel model = rankList.getModel();
+                // 행(row)의 수와 열(column)의 수 가져오기
+                int rowCount = model.getRowCount();
+                int columnCount = model.getColumnCount();
+                StringBuilder sb=new StringBuilder();
+                // 각 행과 열의 값을 가져오기
+                for (int row = 0; row < rowCount; row++) {
+                    boolean check=true;
+                    for (int column = 0; column < columnCount; column++) {
+                        if(model.getValueAt(row, column)==null){
+                            check=false;
+                            break;
+                        }
+                        if(check) sb.append(model.getValueAt(row, column)+" ");
+                    }
+                    sb.append("\n");
+                }
+                w.write(sb.toString());
+                w.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        add(save);
+
+        JButton load = new JButton("load");
+        load.setBounds(220, height + 150, 68, 30);
+        load.addActionListener((ActionEvent ae) -> {
+            try {
+                Reader r = new FileReader("test.txt");
+                StringBuilder sb=new StringBuilder();
+                while (true){
+                    int read = r.read();
+                    sb.append((char)read);
+                    if(read==-1)break;
+                }
+                String s = sb.toString();
+                r.close();
+                String[] split = s.split("\n");
+                for(String content:split){
+                    String[] s1 = content.split(" ");
+                    if(s1.length==4){
+                        canvas.contents[contentSize][0]=s1[0];
+                        canvas.contents[contentSize][1]=s1[1];
+                        canvas.contents[contentSize][2]=s1[2];
+                        canvas.contents[contentSize][3]=s1[3];
+                        canvas.controls.putRank();
+                        contentSize++;
+                    }
+
+                }
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        add(load);
     }
 
     //랭크 넣기
