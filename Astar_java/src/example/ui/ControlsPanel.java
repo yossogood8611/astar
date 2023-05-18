@@ -344,7 +344,7 @@ public class ControlsPanel extends JPanel {
                 if (((t.getX() == start.getX()) && (t.getY() == start.getY())) || ((t.getX() == end.getX()) && (t.getY() == end.getY()))) {
                     canvas.showCanNotBuild();
                 } else {
-                    t.setWeight(3000);
+                    t.setWeight(3);
                 }
                 break;
             default:

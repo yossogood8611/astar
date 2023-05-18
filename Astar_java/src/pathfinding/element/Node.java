@@ -1,6 +1,7 @@
 package pathfinding.element;
 
 import example.element.Grid;
+import example.element.Tile;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ public abstract class Node {
 
     public abstract double distanceTo(Node dest);
 
-    public abstract double heuristic(Node dest, Grid grid);
+    public abstract double heuristic(Tile dest, Grid grid);
 
     public double getCost() {
         return cost;

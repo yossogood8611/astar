@@ -10,7 +10,7 @@ public class Tile extends Node {
 
     private int x, y, weight;
     public static int TILE_SIZE = 30;
-    private boolean check =false;
+    private boolean check = false;
 
     private Grid grid;
 
@@ -38,7 +38,9 @@ public class Tile extends Node {
         return y;
     }
 
-    public int getWeight(){return weight;}
+    public int getWeight() {
+        return weight;
+    }
 
     public void setX(int x) {
         this.x = x;
@@ -48,7 +50,9 @@ public class Tile extends Node {
         this.y = y;
     }
 
-    public void setWeight(int weight){this.weight = weight;}
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     @Override
     public void calculateNeighbours(Network network) {
@@ -103,11 +107,12 @@ public class Tile extends Node {
     }
 
     @Override
-    public double heuristic(Node dest, Grid grid) {
-        if(grid.hasTileWithWeight()){
+    public double heuristic(Tile dest, Grid grid) {
+
+        if (dest.getWeight() == 3) {
             System.out.println("웨이트");
             return distanceToWeight(dest);
-        }else{
+        } else {
             return distanceTo(dest);
         }
     }
@@ -118,9 +123,9 @@ public class Tile extends Node {
         return new Point(x, y).distance(new Point(d.x, d.y));
     }
 
-    public double distanceToWeight(Node dest){
+    public double distanceToWeight(Node dest) {
         Tile d = (Tile) dest;
-        return new Point(x, y).distance(new Point(d.x, d.y))*d.weight;
+        return new Point(x, y).distance(new Point(d.x, d.y)) * d.weight;
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import example.element.Grid;
+import example.element.Tile;
 import pathfinding.element.Network;
 import pathfinding.element.Node;
 
@@ -70,7 +71,7 @@ public class AStarAlgorithm extends Observable {
                     n.setParent(current);
                 }
 
-                n.setHeuristic(n.heuristic(end, (Grid) network));
+                n.setHeuristic(n.heuristic((Tile) end, (Grid) network));
                 n.setFunction(n.getCost() + n.getHeuristic());
 
             }
@@ -90,7 +91,8 @@ public class AStarAlgorithm extends Observable {
             n.setValid(true);
         }
     }
-    public void reset(Node start,Node end) {
+
+    public void reset(Node start, Node end) {
         this.start = start;
         this.end = end;
         this.path = null;
@@ -105,7 +107,7 @@ public class AStarAlgorithm extends Observable {
         while (temp.getParent() != null) {
             this.path.add(temp.getParent());
             temp = temp.getParent();
-            if(temp.equals(start)){
+            if (temp.equals(start)) {
                 break;
             }
         }
@@ -149,8 +151,8 @@ public class AStarAlgorithm extends Observable {
         this.start = start;
     }
 
-    public void setEnd(Node end){
-            this.end = end;
+    public void setEnd(Node end) {
+        this.end = end;
     }
 
 }
