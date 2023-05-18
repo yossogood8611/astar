@@ -145,11 +145,11 @@ public class GridPanel extends JPanel implements Observer {
         String title;
 
         if (isGameWon) {
-            message = "Congratulations! You won the game.";
-            title = "You Win";
+            message = "축하합니다. 당신이 이겼습니다.";
+            title = "You Win!";
         } else {
-            message = "Game Over. You lose the game.";
-            title = "Game Over";
+            message = "아쉽네요. 게임에 졌습니다.";
+            title = "Game Over!";
             setBackground(Color.black);
         }
 
@@ -189,7 +189,7 @@ public class GridPanel extends JPanel implements Observer {
         else
             score += 100;
         score += time;
-        contents[contentSize][3] = String.valueOf(score + Integer.parseInt(contents[contentSize][2].replace("Life: ", "")) * 10);
+        contents[contentSize][3] = String.valueOf(score + Integer.parseInt(contents[contentSize][2].replace("생명: ", "")) * 10);
 
         controls.putRank();
         contentSize++;
