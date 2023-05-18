@@ -39,6 +39,7 @@ public class ControlsPanel extends JPanel {
     public static int endTime;
     public static int endLife;
 
+    //게임 설정 초기화
     public void resetGameSetting() {
         timer.stop();
         canvas.timer.stop();
@@ -50,36 +51,45 @@ public class ControlsPanel extends JPanel {
         timerLabel.setText(TIME_60);
     }
 
+    //생명 카운트 감소
     public void lifeDown() {
         this.lifeCount--;
         this.lifeLabel.setText("Life: " + this.lifeCount);
     }
+
+    //생명 카운트 증가
     public void lifeUp() {
         this.lifeCount++;
         this.lifeLabel.setText("Life: " + this.lifeCount);
     }
 
+    //생명 카운트 0인지 확인
     public boolean isLifeZero() {
         if (lifeCount == 0) return true;
         else return false;
     }
 
+    //생명 카운트 반환
     public int getLifeCount() {
         return this.lifeCount;
     }
 
+    //현재 타이머 반환
     public Timer getTimer() {
         return this.timer;
     }
 
+    //생명 카운트 설정
     public void setLifeCount(int lifeCount) {
         this.lifeCount = lifeCount;
     }
 
+    //타이머 설정
     public void setTimer(Timer timer) {
         this.timer = timer;
     }
 
+    //패널 생성
     public ControlsPanel(int width, int height, AStarAlgorithm algorithm) {
 
         this.algorithm = algorithm;
@@ -211,6 +221,7 @@ public class ControlsPanel extends JPanel {
         add(lifeLabel);
     }
 
+    //랭크 넣기
     public JScrollPane putRank() {
         rankList = new JTable(GridPanel.contents, GridPanel.header);
         rankList.disable();
@@ -221,6 +232,7 @@ public class ControlsPanel extends JPanel {
         return scrollPane;
     }
 
+    //주어진 타일을 선택해서 유저 몬스터 벽을 생성
     public void selectTile(Tile t) {
         switch (selectionType) {
             case START:
@@ -258,6 +270,7 @@ public class ControlsPanel extends JPanel {
         algorithm.updateUI();
     }
 
+    //레벨 타입 선택
     public void selectLevel() {
         switch (levelType) {
             case EASY:

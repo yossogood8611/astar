@@ -49,7 +49,7 @@ public class GridPanel extends JPanel implements Observer {
     public KeyAdapter userMovement;
     public Timer itemTimer;
     public Tile item;
-    public static String[] header = {"난이도", "생존 시간", "남은 생명","점수"};
+    public static String[] header = {"난이도", "생존 시간", "남은 생명", "점수"};
     public static String[][] contents = new String[50][4]; //{{"Hard", "60", "3", "321223(점수)"}};
     public static int contentSize = 0;
 
@@ -130,6 +130,7 @@ public class GridPanel extends JPanel implements Observer {
         });
     }
 
+    //좌표값에 벽을 생성함
     public void createWall(int x, int y) {
         Tile t = grid.find(x, y);
 
@@ -138,6 +139,7 @@ public class GridPanel extends JPanel implements Observer {
         }
     }
 
+    //게임 종료 시 메시지 출력
     public void showEndGameDialog(boolean isGameWon) {
         String message;
         String title;
@@ -157,14 +159,22 @@ public class GridPanel extends JPanel implements Observer {
         setBackground(new Color(238, 238, 238));
     }
 
+    //게임 종료 후 우측 하단에 랭킹 설정
     private void setRank() {
         contents[contentSize][0] = ControlsPanel.levelType.name();
-        int temp=0;
-        switch (levelType.name()){
-            case "EASY":temp=20;break;
-            case "NORMAL":temp=40;break;
-            case "HARD":temp=60;break;
-            case "CUSTOM":return;
+        int temp = 0;
+        switch (levelType.name()) {
+            case "EASY":
+                temp = 20;
+                break;
+            case "NORMAL":
+                temp = 40;
+                break;
+            case "HARD":
+                temp = 60;
+                break;
+            case "CUSTOM":
+                return;
         }
         int time = temp - ControlsPanel.endTime;
         contents[contentSize][1] = String.valueOf(time);
@@ -178,17 +188,20 @@ public class GridPanel extends JPanel implements Observer {
             score += 60;
         else
             score += 100;
-        score+=time;
-        contents[contentSize][3] = String.valueOf(score + Integer.parseInt(contents[contentSize][2].replace("Life: ", ""))*10);
+        score += time;
+        contents[contentSize][3] = String.valueOf(score + Integer.parseInt(contents[contentSize][2].replace("Life: ", "")) * 10);
 
         controls.putRank();
         contentSize++;
     }
 
+    //벽을 생성할 수 없음을 다이얼로그로 표시
     public void showCanNotBuild() {
         JOptionPane.showMessageDialog(this, "생성 불가능 합니다.", "warning", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    //사용자의 이동을 시작
+    //levelType에 따라 이동 속도를 설정
     public void startUserMovement(ControlsPanel.LevelType levelType) {
         userMovement = getUserMoveMent(algorithm, algorithm.getNetwork());
         addKeyListener(userMovement);
@@ -209,6 +222,7 @@ public class GridPanel extends JPanel implements Observer {
                 speed = Integer.parseInt(ControlsPanel.setSpeedText.getText());
                 break;
         }
+
         pathTimer = new Timer(speed, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -236,9 +250,11 @@ public class GridPanel extends JPanel implements Observer {
             }
         });
         pathTimer.start();
-
     }
 
+    //사용자가 키보드로 움직이는 이벤트
+    //algorithm 통해 계속 몬스터가 유저의 최적화 경로를 찾음
+    //solve()
     public KeyAdapter getUserMoveMent(AStarAlgorithm algorithm, Network network) {
         KeyAdapter UserMovement = new KeyAdapter() {
             @Override
@@ -274,7 +290,7 @@ public class GridPanel extends JPanel implements Observer {
                             lifeDown();
                             return;
                         }
-                        if (x == item.getX() && y  + 1 == item.getY()) {
+                        if (x == item.getX() && y + 1 == item.getY()) {
                             item.setCheck(true);
                             controls.lifeUp();
                         }
@@ -361,6 +377,7 @@ public class GridPanel extends JPanel implements Observer {
         return UserMovement;
     }
 
+    //마우스 이벤트 비활성화
     public void disableMouseEvents() {
         addMouseListener(new MouseAdapter() {
         });
@@ -368,6 +385,7 @@ public class GridPanel extends JPanel implements Observer {
         });
     }
 
+    //패널 그림
     @Override
     protected void paintComponent(Graphics g1) {
         super.paintComponent(g1);
@@ -478,6 +496,7 @@ public class GridPanel extends JPanel implements Observer {
         g.drawRect(0, getHeight() - 1, getWidth(), 1);
     }
 
+    //그래픽 객체의 상태를 업데이트하고 화면을 다시 그리는 메서드
     @Override
     public void update(Observable o, Object o1) {
         AStarAlgorithm alg = (AStarAlgorithm) o;
