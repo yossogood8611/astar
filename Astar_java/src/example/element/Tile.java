@@ -48,7 +48,7 @@ public class Tile extends Node {
         this.y = y;
     }
 
-    public void setWeight(int wight){this.weight = weight;}
+    public void setWeight(int weight){this.weight = weight;}
 
     @Override
     public void calculateNeighbours(Network network) {
@@ -103,8 +103,9 @@ public class Tile extends Node {
     }
 
     @Override
-    public double heuristic(Node dest) {
-        if(grid.hasTileWithWeight()==true){
+    public double heuristic(Node dest, Grid grid) {
+        if(grid.hasTileWithWeight()){
+            System.out.println("웨이트");
             return distanceToWeight(dest);
         }else{
             return distanceTo(dest);

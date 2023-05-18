@@ -3,6 +3,7 @@ package pathfinding;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import example.element.Grid;
 import pathfinding.element.Network;
 import pathfinding.element.Node;
 
@@ -69,7 +70,7 @@ public class AStarAlgorithm extends Observable {
                     n.setParent(current);
                 }
 
-                n.setHeuristic(n.heuristic(end));
+                n.setHeuristic(n.heuristic(end, (Grid) network));
                 n.setFunction(n.getCost() + n.getHeuristic());
 
             }
