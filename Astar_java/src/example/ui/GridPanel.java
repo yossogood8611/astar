@@ -256,7 +256,12 @@ public class GridPanel extends JPanel implements Observer {
                             lifeDown();
                             return;
                         }
+
                         user = new Tile(x, y - 1);
+                        if (x == item.getX() && y - 1 == item.getY()) {
+                            item.setCheck(true);
+                            controls.lifeUp();
+                        }
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_DOWN) {
@@ -268,6 +273,10 @@ public class GridPanel extends JPanel implements Observer {
                         if (!grid.find(x, y + 1).isValid()) {
                             lifeDown();
                             return;
+                        }
+                        if (x == item.getX() && y  + 1 == item.getY()) {
+                            item.setCheck(true);
+                            controls.lifeUp();
                         }
                         user = new Tile(x, y + 1);
                         repaint();
@@ -282,6 +291,10 @@ public class GridPanel extends JPanel implements Observer {
                             lifeDown();
                             return;
                         }
+                        if (x - 1 == item.getX() && y == item.getY()) {
+                            item.setCheck(true);
+                            controls.lifeUp();
+                        }
                         user = new Tile(x - 1, y);
                         repaint();
                     }
@@ -295,6 +308,10 @@ public class GridPanel extends JPanel implements Observer {
                             lifeDown();
                             return;
                         }
+                        if (x + 1 == item.getX() && y == item.getY()) {
+                            item.setCheck(true);
+                            controls.lifeUp();
+                        }
                         user = new Tile(x + 1, y);
                         repaint();
                     }
@@ -302,9 +319,7 @@ public class GridPanel extends JPanel implements Observer {
                 if (item == null) {
                     return;
                 } else {
-                    if (x == item.getX() && y == item.getY()) {
-                        item.setCheck(true);
-                    }
+
                 }
 
                 user.calculateNeighbours(algorithm.getNetwork());
@@ -381,7 +396,6 @@ public class GridPanel extends JPanel implements Observer {
             BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2d = myImage.createGraphics();
             g2d.drawImage(userImage, 0, 0, 30, 30, null);
-            g2d.dispose();
             g.drawImage(myImage, x, y, 150, 150, null);
             g.setStroke(widerStroke);
         }
@@ -426,7 +440,7 @@ public class GridPanel extends JPanel implements Observer {
                     BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2d = myImage.createGraphics();
                     g2d.drawImage(blockImage, 0, 0, 30, 30, null);
-                    g2d.dispose();
+
                     g.drawImage(myImage, x, y, 150, 150, null);
                     g.setStroke(widerStroke);
                 }
@@ -438,10 +452,20 @@ public class GridPanel extends JPanel implements Observer {
                 return;
             }
             if (!item.isCheck()) {
-                g.setColor(Color.ORANGE);
+                Image blockImage = null;
+                try {
+                    blockImage = ImageIO.read(new File("hp.png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = myImage.createGraphics();
+                g2d.drawImage(blockImage, 0, 0, 30, 30, null);
+                g2d.dispose();
+                g.drawImage(myImage, (item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 130, 130, null);
                 AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
                 g.setComposite(alphaComposite);
-                g.fillOval((item.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 10, (item.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 10, 20, 20);
             } else {
                 g.setColor(new Color(238, 238, 238));
                 AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.01f);

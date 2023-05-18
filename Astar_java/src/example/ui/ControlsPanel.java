@@ -54,6 +54,10 @@ public class ControlsPanel extends JPanel {
         this.lifeCount--;
         this.lifeLabel.setText("Life: " + this.lifeCount);
     }
+    public void lifeUp() {
+        this.lifeCount++;
+        this.lifeLabel.setText("Life: " + this.lifeCount);
+    }
 
     public boolean isLifeZero() {
         if (lifeCount == 0) return true;
