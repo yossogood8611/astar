@@ -71,7 +71,7 @@ public class Main {
 
         for (int i = 0; i < COLUMN_COUNT; i++) {
             for (int j = 0; j < ROW_COUNT; j++) {
-                Tile t = new Tile(i, j);
+                Tile t = new Tile(i, j, 1);
                 tiles.add(t);
             }
         }

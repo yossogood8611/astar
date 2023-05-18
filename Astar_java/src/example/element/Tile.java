@@ -8,9 +8,11 @@ import java.util.ArrayList;
 
 public class Tile extends Node {
 
-    private int x, y;
+    private int x, y, weight;
     public static int TILE_SIZE = 30;
     private boolean check =false;
+
+    private Grid grid;
 
 
     public void setCheck(boolean check) {
@@ -21,9 +23,10 @@ public class Tile extends Node {
         return check;
     }
 
-    public Tile(int x, int y) {
+    public Tile(int x, int y, int weight) {
         this.x = x;
         this.y = y;
+        this.weight = weight;
         setValid(true);
     }
 
@@ -35,6 +38,8 @@ public class Tile extends Node {
         return y;
     }
 
+    public int getWeight(){return weight;}
+
     public void setX(int x) {
         this.x = x;
     }
@@ -42,6 +47,8 @@ public class Tile extends Node {
     public void setY(int y) {
         this.y = y;
     }
+
+    public void setWeight(int wight){this.weight = weight;}
 
     @Override
     public void calculateNeighbours(Network network) {
@@ -97,13 +104,22 @@ public class Tile extends Node {
 
     @Override
     public double heuristic(Node dest) {
-        return distanceTo(dest);
+        if(grid.hasTileWithWeight()==true){
+            return distanceToWeight(dest);
+        }else{
+            return distanceTo(dest);
+        }
     }
 
     @Override
     public double distanceTo(Node dest) {
         Tile d = (Tile) dest;
         return new Point(x, y).distance(new Point(d.x, d.y));
+    }
+
+    public double distanceToWeight(Node dest){
+        Tile d = (Tile) dest;
+        return new Point(x, y).distance(new Point(d.x, d.y))*d.weight;
     }
 
 }

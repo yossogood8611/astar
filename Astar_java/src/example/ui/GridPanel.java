@@ -64,7 +64,7 @@ public class GridPanel extends JPanel implements Observer {
         this.widerStroke = new BasicStroke(2);
         this.algorithm = algorithm;
 
-        this.item = new Tile(0, 0);
+        this.item = new Tile(0, 0, 1);
 
         setBorder(new LineBorder(Color.gray));
 
@@ -273,7 +273,7 @@ public class GridPanel extends JPanel implements Observer {
                             return;
                         }
 
-                        user = new Tile(x, y - 1);
+                        user = new Tile(x, y - 1, 1);
                         if (x == item.getX() && y - 1 == item.getY()) {
                             item.setCheck(true);
                             controls.lifeUp();
@@ -294,7 +294,7 @@ public class GridPanel extends JPanel implements Observer {
                             item.setCheck(true);
                             controls.lifeUp();
                         }
-                        user = new Tile(x, y + 1);
+                        user = new Tile(x, y + 1, 1);
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_LEFT) {
@@ -311,7 +311,7 @@ public class GridPanel extends JPanel implements Observer {
                             item.setCheck(true);
                             controls.lifeUp();
                         }
-                        user = new Tile(x - 1, y);
+                        user = new Tile(x - 1, y, 1);
                         repaint();
                     }
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
@@ -328,7 +328,7 @@ public class GridPanel extends JPanel implements Observer {
                             item.setCheck(true);
                             controls.lifeUp();
                         }
-                        user = new Tile(x + 1, y);
+                        user = new Tile(x + 1, y, 1);
                         repaint();
                     }
                 }
@@ -440,6 +440,7 @@ public class GridPanel extends JPanel implements Observer {
 
         g.setStroke(defaultStroke);
 
+
         if (grid != null && grid.getTiles() != null) {
             for (Tile t : grid.getTiles()) {
                 g.setColor(new Color(220, 220, 220));
@@ -458,6 +459,24 @@ public class GridPanel extends JPanel implements Observer {
                     BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2d = myImage.createGraphics();
                     g2d.drawImage(blockImage, 0, 0, 30, 30, null);
+
+                    g.drawImage(myImage, x, y, 150, 150, null);
+                    g.setStroke(widerStroke);
+                }
+                if (t.getWeight()!=1) {
+                    int x = (t.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+                    int y = (t.getY() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
+
+                    Image grassImage = null;
+                    try {
+                        grassImage = ImageIO.read(new File("grass.png"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    BufferedImage myImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = myImage.createGraphics();
+                    g2d.drawImage(grassImage, 0, 0, 30, 30, null);
 
                     g.drawImage(myImage, x, y, 150, 150, null);
                     g.setStroke(widerStroke);

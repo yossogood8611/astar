@@ -52,6 +52,15 @@ public class Grid extends Network {
         return null;
     }
 
+    public boolean hasTileWithWeight(){
+        for(Tile tile : tiles){
+            if(tile.getWeight() == 3){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public Iterable<Node> getNodes() {
         ArrayList<Node> nodes = new ArrayList<>();

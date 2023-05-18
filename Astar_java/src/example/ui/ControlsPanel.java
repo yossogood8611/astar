@@ -112,6 +112,7 @@ public class ControlsPanel extends JPanel {
         selector = new JComboBox<>();
         selector.addItem("유저");
         selector.addItem("몬스터");
+        selector.addItem("언덕");
         selector.addItem("벽");
         selector.setBounds(10, 35, width - 20, 30);
         selector.setFont(dodum);
@@ -187,7 +188,7 @@ public class ControlsPanel extends JPanel {
         start.setBounds(160, height + 100, 130, 30);
         start.setFont(dodum);
         start.addActionListener((ActionEvent ae) -> {
-            canvas.item = new Tile(0, 0);
+            canvas.item = new Tile(0, 0, 1);
             remainingTime = Integer.parseInt(setTimeText.getText().replace("시간: ", ""));
             lifeCount = Integer.parseInt(setLifeText.getText());
             algorithm.solve();
@@ -318,6 +319,8 @@ public class ControlsPanel extends JPanel {
 
     //주어진 타일을 선택해서 유저 몬스터 벽을 생성
     public void selectTile(Tile t) {
+        Tile start = (Tile) algorithm.getStart();
+        Tile end = (Tile) algorithm.getEnd();
         switch (selectionType) {
             case START:
                 if (t.isValid()) {
@@ -331,15 +334,20 @@ public class ControlsPanel extends JPanel {
             case END:
                 if (t.isValid()) {
                     algorithm.setEnd(t);
-                    selectionType = SelectionType.REVERSE;
+                    selectionType = SelectionType.HILL;
                     selector.setSelectedIndex(2);
                 } else {
                     canvas.showCanNotBuild();
                 }
                 break;
+            case HILL:
+                if (((t.getX() == start.getX()) && (t.getY() == start.getY())) || ((t.getX() == end.getX()) && (t.getY() == end.getY()))) {
+                    canvas.showCanNotBuild();
+                } else {
+                    t.setWeight(3);
+                }
+                break;
             default:
-                Tile start = (Tile) algorithm.getStart();
-                Tile end = (Tile) algorithm.getEnd();
                 if (start == null || end == null) {
                     t.reverseValidation();
                 }
@@ -409,7 +417,7 @@ public class ControlsPanel extends JPanel {
     }
 
     enum SelectionType {
-        START, END, REVERSE
+        START, END, HILL, REVERSE
     }
 
     public enum LevelType {
