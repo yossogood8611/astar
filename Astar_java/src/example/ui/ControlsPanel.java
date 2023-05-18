@@ -1,6 +1,5 @@
 package example.ui;
 
-import example.element.Grid;
 import example.element.Tile;
 import pathfinding.AStarAlgorithm;
 
@@ -26,7 +25,7 @@ public class ControlsPanel extends JPanel {
     private JComboBox<String> selector;
     private GridPanel canvas;
 
-    public Timer timer;
+    public Timer gameTimer;
     public static JLabel timerLabel;
     public static JLabel lifeLabel;
     public static JTextField setSpeedText;
@@ -47,9 +46,10 @@ public class ControlsPanel extends JPanel {
 
     //게임 설정 초기화
     public void resetGameSetting() {
-        timer.stop();
-        canvas.timer.stop();
-        canvas.pathTimer.stop();
+        gameTimer.stop();
+        canvas.monsterTimer.stop();
+        canvas.itemTimer.stop();
+        canvas.item=null;
         lifeCount = 3;
         lifeLabel.setText("생명: " + lifeCount);
         algorithm.reset();
@@ -81,8 +81,8 @@ public class ControlsPanel extends JPanel {
     }
 
     //현재 타이머 반환
-    public Timer getTimer() {
-        return this.timer;
+    public Timer getGameTimer() {
+        return this.gameTimer;
     }
 
     //생명 카운트 설정
@@ -91,8 +91,8 @@ public class ControlsPanel extends JPanel {
     }
 
     //타이머 설정
-    public void setTimer(Timer timer) {
-        this.timer = timer;
+    public void setGameTimer(Timer gameTimer) {
+        this.gameTimer = gameTimer;
     }
 
     //패널 생성
@@ -155,7 +155,7 @@ public class ControlsPanel extends JPanel {
         setTimeText.setFont(dodum);
         add(setTimeText);
 
-        Label lifeLabelText = new Label("Life: ");
+        Label lifeLabelText = new Label("생명: ");
         lifeLabelText.setBounds(160, height + 40, 40, 10);
         lifeLabelText.setFont(dodum);
         add(lifeLabelText);
@@ -175,7 +175,7 @@ public class ControlsPanel extends JPanel {
             canvas.item = null;
             selectionType = SelectionType.START;
             canvas.setCheck(true);
-            timer.stop();
+            gameTimer.stop();
             timerLabel.setText(TIME_60);
             lifeCount = 3;
             lifeLabel.setText("생명: " + lifeCount);
@@ -190,12 +190,18 @@ public class ControlsPanel extends JPanel {
             canvas.item = new Tile(0, 0);
             remainingTime = Integer.parseInt(setTimeText.getText().replace("시간: ", ""));
             lifeCount = Integer.parseInt(setLifeText.getText());
-            algorithm.solve();
-            canvas.startUserMovement(levelType);
-            canvas.setCheck(false);
-            canvas.disableMouseEvents();
-            timer.start();
-            canvas.itemTimer.start();
+            if(algorithm.solve()){
+                canvas.startUserMovement(levelType);
+                canvas.setCheck(false);
+                canvas.disableMouseEvents();
+                gameTimer.start();
+                canvas.itemTimer.start();
+            }else {
+                canvas.showCanNotBuild("설정 값이 입력되지 않았습니다 다시 입력해주세요");
+            }
+
+
+
         });
         add(start);
 
@@ -206,7 +212,7 @@ public class ControlsPanel extends JPanel {
         timerLabel.setBounds(30, height + 140, 80, 15);
         add(timerLabel);
 
-        timer = new Timer(1000, new ActionListener() {
+        gameTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 remainingTime--;
@@ -216,16 +222,15 @@ public class ControlsPanel extends JPanel {
                     endTime = remainingTime;
                     algorithm.reset();
                     algorithm.updateUI();
-                    timer.stop();
-                    canvas.timer.stop();
+                    gameTimer.stop();
+                    canvas.monsterTimer.stop();
                     canvas.item = null;
-                    canvas.pathTimer.stop();
                     canvas.RemoveKeyListener();
                     System.out.println("게임이 끝났습니다.");
                     canvas.easyMap();
                     selectionType = SelectionType.START;
                     lifeCount = 3;
-                    lifeLabel.setText("Life: " + lifeCount);
+                    lifeLabel.setText("생명: " + lifeCount);
                     canvas.easyMap();
                     timerLabel.setText(TIME_60);
                     canvas.showEndGameDialog(true);
@@ -233,7 +238,7 @@ public class ControlsPanel extends JPanel {
             }
         });
 
-        lifeLabel = new JLabel("Life: " + lifeCount);
+        lifeLabel = new JLabel("생명: " + lifeCount);
         lifeLabel.setFont(dodum);
         lifeLabel.setBounds(30, height + 160, 80, 15);
         add(lifeLabel);
@@ -325,7 +330,7 @@ public class ControlsPanel extends JPanel {
                     selectionType = SelectionType.END;
                     selector.setSelectedIndex(1);
                 } else {
-                    canvas.showCanNotBuild();
+                    canvas.showCanNotBuild("벽이 있어 생성 불가능 합니다.");
                 }
                 break;
             case END:
@@ -334,7 +339,7 @@ public class ControlsPanel extends JPanel {
                     selectionType = SelectionType.REVERSE;
                     selector.setSelectedIndex(2);
                 } else {
-                    canvas.showCanNotBuild();
+                    canvas.showCanNotBuild("벽이 있어 생성 불가능 합니다.");
                 }
                 break;
             default:
@@ -344,13 +349,12 @@ public class ControlsPanel extends JPanel {
                     t.reverseValidation();
                 }
                 if (((t.getX() == start.getX()) && (t.getY() == start.getY())) || ((t.getX() == end.getX()) && (t.getY() == end.getY()))) {
-                    canvas.showCanNotBuild();
+                    canvas.showCanNotBuild("사용자 혹은 몬스터가 있어 생성 불가능 합니다.");
                 } else {
                     t.reverseValidation();
                 }
                 break;
         }
-
         algorithm.updateUI();
     }
 
@@ -360,31 +364,22 @@ public class ControlsPanel extends JPanel {
             case EASY:
                 canvas.easyMap();
                 setTimeText.setText(TIME_20.replace("시간: ", ""));
-                setLifeText.setText(String.valueOf(lifeCount));
                 setSpeedText.setText("500");
-                setSpeedText.disable();
-                setLifeText.disable();
-                setTimeText.disable();
+                TextSetting();
                 timerLabel.setText(TIME_20);
                 break;
             case NORMAL:
                 canvas.normalMap();
                 setTimeText.setText(TIME_40.replace("시간: ", ""));
-                setLifeText.setText(String.valueOf(lifeCount));
                 setSpeedText.setText("250");
-                setSpeedText.disable();
-                setLifeText.disable();
-                setTimeText.disable();
+                TextSetting();
                 timerLabel.setText(TIME_40);
                 break;
             case HARD:
                 canvas.hardMap();
                 setTimeText.setText(TIME_60.replace("시간: ", ""));
-                setLifeText.setText(String.valueOf(lifeCount));
                 setSpeedText.setText("100");
-                setSpeedText.disable();
-                setLifeText.disable();
-                setTimeText.disable();
+                TextSetting();
                 timerLabel.setText(TIME_60);
                 break;
             case CUSTOM:
@@ -399,9 +394,11 @@ public class ControlsPanel extends JPanel {
         algorithm.updateUI();
     }
 
-    public void selectTiles(Tile t) {
-        algorithm.setStart(t);
-        algorithm.updateUI();
+    private void TextSetting() {
+        setLifeText.setText(String.valueOf(lifeCount));
+        setSpeedText.disable();
+        setLifeText.disable();
+        setTimeText.disable();
     }
 
     public void setGridPanel(GridPanel canvas) {

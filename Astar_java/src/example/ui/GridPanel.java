@@ -19,7 +19,6 @@ import example.element.Tile;
 
 import static example.element.Tile.TILE_SIZE;
 import static example.ui.ControlsPanel.levelType;
-import static example.ui.ControlsPanel.lifeLabel;
 
 public class GridPanel extends JPanel implements Observer {
 
@@ -39,11 +38,8 @@ public class GridPanel extends JPanel implements Observer {
     // 추가된 변수
 //    private int currentIndex; // 현재 경로 인덱스
 
-    public Timer pathTimer; // 경로 이동 타이머
+    public Timer monsterTimer; // 경로 이동 타이머
     private int currentIndex = 0;
-
-
-    public Timer timer;
     private AStarAlgorithm algorithm;
 
     public KeyAdapter userMovement;
@@ -83,9 +79,7 @@ public class GridPanel extends JPanel implements Observer {
                 createWall(tileX, tileY);
             }
         });
-
-        // 경로 이동 타이머 초기화
-        timer = new Timer(500, new ActionListener() {
+        monsterTimer = new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (path != null && currentIndex < path.size()) {
@@ -93,21 +87,10 @@ public class GridPanel extends JPanel implements Observer {
                     currentIndex++;
                     repaint();
                 } else {
-                    ControlsPanel.endLife = 0;
-                    ControlsPanel.endTime = ControlsPanel.remainingTime;
+                    if(path==null){
 
-                    timer.stop();
-                    itemTimer.stop();
-                    item = null;
-                    RemoveKeyListener();
-                    System.out.println("게임이 끝났습니다.");
-                    check = true;
-                    setRequestFocusEnabled(false);
-                    controls.resetGameSetting();
-                    algorithm.reset();
-                    algorithm.updateUI();
-                    showEndGameDialog(false);
-                    easyMap();
+                    }
+                    resetGameSet();
                 }
             }
         });
@@ -128,6 +111,18 @@ public class GridPanel extends JPanel implements Observer {
                 }
             }
         });
+    }
+
+    private void resetGameSet() {
+        ControlsPanel.endLife = 0;
+        ControlsPanel.endTime = ControlsPanel.remainingTime;
+        RemoveKeyListener();
+        System.out.println("게임이 끝났습니다.");
+        setRequestFocusEnabled(false);
+        check = true;
+        controls.resetGameSetting();
+        showEndGameDialog(false);
+        easyMap();
     }
 
     //좌표값에 벽을 생성함
@@ -152,9 +147,7 @@ public class GridPanel extends JPanel implements Observer {
             title = "Game Over!";
             setBackground(Color.black);
         }
-
         setRank();
-
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
         setBackground(new Color(238, 238, 238));
     }
@@ -190,14 +183,13 @@ public class GridPanel extends JPanel implements Observer {
             score += 100;
         score += time;
         contents[contentSize][3] = String.valueOf(score + Integer.parseInt(contents[contentSize][2].replace("생명: ", "")) * 10);
-
         controls.putRank();
         contentSize++;
     }
 
     //벽을 생성할 수 없음을 다이얼로그로 표시
-    public void showCanNotBuild() {
-        JOptionPane.showMessageDialog(this, "생성 불가능 합니다.", "warning", JOptionPane.INFORMATION_MESSAGE);
+    public void showCanNotBuild(String s) {
+        JOptionPane.showMessageDialog(this, s, "warning", JOptionPane.INFORMATION_MESSAGE);
     }
 
     //사용자의 이동을 시작
@@ -222,34 +214,8 @@ public class GridPanel extends JPanel implements Observer {
                 speed = Integer.parseInt(ControlsPanel.setSpeedText.getText());
                 break;
         }
-
-        pathTimer = new Timer(speed, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (path != null && currentIndex < path.size()) {
-                    monster = path.get(currentIndex);
-                    currentIndex++;
-                    repaint();
-                } else {
-                    ControlsPanel.endLife = 0;
-                    ControlsPanel.endTime = ControlsPanel.remainingTime;
-
-                    timer.stop();
-                    itemTimer.stop();
-                    item = null;
-                    RemoveKeyListener();
-                    System.out.println("게임이 끝났습니다.");
-                    check = true;
-                    setRequestFocusEnabled(false);
-                    controls.resetGameSetting();
-                    algorithm.reset();
-                    algorithm.updateUI();
-                    showEndGameDialog(false);
-                    easyMap();
-                }
-            }
-        });
-        pathTimer.start();
+        monsterTimer.setDelay(speed);
+        monsterTimer.start();
     }
 
     //사용자가 키보드로 움직이는 이벤트
@@ -262,81 +228,64 @@ public class GridPanel extends JPanel implements Observer {
                 int keyCode = e.getKeyCode();
                 int x = user.getX();
                 int y = user.getY();
-                if (keyCode == KeyEvent.VK_UP) {
-                    if (user != null) {
-                        if (y == 0) {
-                            lifeDown();
-                            return;
-                        }
-                        if (!grid.find(x, y - 1).isValid()) {
-                            lifeDown();
-                            return;
-                        }
+                if (user != null) {
+                    switch (keyCode) {
+                        case KeyEvent.VK_UP: {
+                            if (y == 0 || !grid.find(x, y - 1).isValid()) {
+                                lifeDown();
+                                return;
+                            }
+                            user = new Tile(x, y - 1);
+                            if (x == item.getX() && y - 1 == item.getY()) {
+                                eatItem();
+                            }
 
-                        user = new Tile(x, y - 1);
-                        if (x == item.getX() && y - 1 == item.getY()) {
-                            item.setCheck(true);
-                            controls.lifeUp();
                         }
-                        repaint();
-                    }
-                } else if (keyCode == KeyEvent.VK_DOWN) {
-                    if (user != null) {
-                        if (y > 18) {
-                            lifeDown();
-                            return;
+                        break;
+
+                        case KeyEvent.VK_DOWN: {
+                            if (y > 18 || !grid.find(x, y + 1).isValid()) {
+                                lifeDown();
+                                return;
+                            }
+                            if (x == item.getX() && y + 1 == item.getY()) {
+                                eatItem();
+                            }
+                            user = new Tile(x, y + 1);
+
                         }
-                        if (!grid.find(x, y + 1).isValid()) {
-                            lifeDown();
-                            return;
+                        break;
+
+
+                        case KeyEvent.VK_LEFT: {
+                            if (x == 0 || !grid.find(x - 1, y).isValid()) {
+                                lifeDown();
+                                return;
+                            }
+                            if (x - 1 == item.getX() && y == item.getY()) {
+                                eatItem();
+                            }
+                            user = new Tile(x - 1, y);
+
                         }
-                        if (x == item.getX() && y + 1 == item.getY()) {
-                            item.setCheck(true);
-                            controls.lifeUp();
+                        break;
+
+                        case KeyEvent.VK_RIGHT: {
+                            if (x > 18 || !grid.find(x + 1, y).isValid()) {
+                                lifeDown();
+                                return;
+                            }
+                            if (x + 1 == item.getX() && y == item.getY()) {
+                                eatItem();
+                            }
+                            user = new Tile(x + 1, y);
+
                         }
-                        user = new Tile(x, y + 1);
-                        repaint();
-                    }
-                } else if (keyCode == KeyEvent.VK_LEFT) {
-                    if (user != null) {
-                        if (x == 0) {
-                            lifeDown();
-                            return;
-                        }
-                        if (!grid.find(x - 1, y).isValid()) {
-                            lifeDown();
-                            return;
-                        }
-                        if (x - 1 == item.getX() && y == item.getY()) {
-                            item.setCheck(true);
-                            controls.lifeUp();
-                        }
-                        user = new Tile(x - 1, y);
-                        repaint();
-                    }
-                } else if (keyCode == KeyEvent.VK_RIGHT) {
-                    if (user != null) {
-                        if (x > 18) {
-                            lifeDown();
-                            return;
-                        }
-                        if (!grid.find(x + 1, y).isValid()) {
-                            lifeDown();
-                            return;
-                        }
-                        if (x + 1 == item.getX() && y == item.getY()) {
-                            item.setCheck(true);
-                            controls.lifeUp();
-                        }
-                        user = new Tile(x + 1, y);
-                        repaint();
+                        break;
+
                     }
                 }
-                if (item == null) {
-                    return;
-                } else {
-
-                }
+                repaint();
 
                 user.calculateNeighbours(algorithm.getNetwork());
                 algorithm.reset(user, monster);
@@ -351,30 +300,16 @@ public class GridPanel extends JPanel implements Observer {
 
             private void gameOver() {
                 if (controls.isLifeZero()) {
-                    ControlsPanel.endLife = 0;
-                    ControlsPanel.endTime = ControlsPanel.remainingTime;
-
-                    pathTimer.stop();
-                    timer.stop();
-                    itemTimer.stop();
-                    item = null;
-
-                    RemoveKeyListener();
-                    algorithm.reset();
-                    algorithm.updateUI();
-
-                    System.out.println("게임이 끝났습니다.");
-                    setRequestFocusEnabled(false);
-                    check = false;
-                    controls.resetGameSetting();
-                    algorithm.reset();
-                    algorithm.updateUI();
-                    showEndGameDialog(false);
-                    easyMap();
+                    resetGameSet();
                 }
             }
         };
         return UserMovement;
+    }
+
+    private void eatItem() {
+        item.setCheck(true);
+        controls.lifeUp();
     }
 
     //마우스 이벤트 비활성화
@@ -390,6 +325,7 @@ public class GridPanel extends JPanel implements Observer {
     protected void paintComponent(Graphics g1) {
         super.paintComponent(g1);
 
+
         ImageIcon background = new ImageIcon("grass.jpg");
         backImage = background.getImage();
         g1.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
@@ -397,6 +333,25 @@ public class GridPanel extends JPanel implements Observer {
         Graphics2D g = (Graphics2D) g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (path != null) {
+            g.setColor(new Color(229, 142, 229));
+            for (int i = 0; i < path.size() - 1; i++) {
+                Tile t = path.get(i);
+                Tile t2 = path.get(i + 1);
+
+                int x = (t.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
+                int y = (t.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2) - 5;
+
+                int xx = (t2.getX() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2);
+                int yy = (t2.getY() * Tile.TILE_SIZE) + (Tile.TILE_SIZE / 2);
+
+                g.setStroke(widerStroke);
+                g.fillOval(x, y, 10, 10);
+                g.setStroke(defaultStroke);
+                g.drawLine(x + 5, y + 5, xx, yy);
+            }
+        }
 
         if (user != null) {
             int x = (user.getX() * TILE_SIZE) + (TILE_SIZE / 2) - 15;
@@ -530,7 +485,7 @@ public class GridPanel extends JPanel implements Observer {
 
         currentIndex = 0; // 인덱스 초기화
         if (this.path != null && this.path.size() > 1) {
-            timer.start();
+            monsterTimer.start();
         }
 
 

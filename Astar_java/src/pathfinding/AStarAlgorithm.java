@@ -21,15 +21,15 @@ public class AStarAlgorithm extends Observable {
         this.network = network;
     }
 
-    public void solve() {
+    public boolean solve() {
 
         if (start == null && end == null) {
-            return;
+            return false;
         }
 
         if (start.equals(end)) {
             this.path = new ArrayList<>();
-            return;
+            return false;
         }
 
         this.path = new ArrayList<>();
@@ -77,6 +77,7 @@ public class AStarAlgorithm extends Observable {
         }
 
         updateUI();
+        return true;
     }
 
     public void reset() {
